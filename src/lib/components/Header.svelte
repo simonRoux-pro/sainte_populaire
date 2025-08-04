@@ -6,12 +6,8 @@
 	<ul class="flex space-x-4">
 		{#each links as link}
 			<li>
-				<a href={link.href} class="hover:underline">{link.label}</a>
+				<a href={link.href} class="btn">{link.label}</a>
 			</li>
 		{/each}
 	</ul>
 </nav>
-
-<style>
-	/* Ajoutez vos styles ici si nécessaire */
-</style>
