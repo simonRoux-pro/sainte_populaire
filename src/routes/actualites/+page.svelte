@@ -1,5 +1,12 @@
-<script>
-	export let data;
+<script lang="ts">
+	export let data: {
+		articles: {
+			slug: string;
+			title: string;
+			summary: string;
+			date: string;
+		}[];
+	};
 </script>
 
 <h1>Actualités</h1>

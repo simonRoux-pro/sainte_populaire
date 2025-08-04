@@ -1,6 +1,8 @@
 <script lang="ts">
-	export let data;
+	// Pas besoin d'importer ou d'utiliser des données dynamiques
 </script>
 
-<h1>{data.frontmatter.title}</h1>
-<div>{@html data.content}</div>
+<h1>Bienvenue sur SaintePop</h1>
+<p>
+	Ceci est la page d'accueil de votre site. Vous pouvez personnaliser ce contenu directement ici.
+</p>
