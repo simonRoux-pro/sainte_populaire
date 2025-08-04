@@ -5,11 +5,10 @@
 	let { children } = $props();
 
 	const links = [
-		{ href: '/', label: 'Accueil' },
-		{ href: '/contact', label: 'Contact' },
-		{ href: '/about', label: 'À propos' },
-		{ href: '/services', label: 'Services' },
-		{ href: '/faq', label: 'FAQ' }
+		{ href: '/sainte-pop', label: 'Sainté Pop’' },
+		{ href: '/agir', label: 'Agir' },
+		{ href: '/programme', label: 'Programme' },
+		{ href: '/contact', label: 'Contact' }
 	];
 </script>
 
