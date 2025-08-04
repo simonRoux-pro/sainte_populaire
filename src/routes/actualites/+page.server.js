@@ -20,7 +20,11 @@ export async function load() {
 				date: data.date
 			};
 		})
-		.sort((a, b) => new Date(b.date) - new Date(a.date));
+		.sort((a, b) => {
+			const dateA = new Date(a.date).getTime() || 0;
+			const dateB = new Date(b.date).getTime() || 0;
+			return dateB - dateA;
+		});
 
 	return {
 		articles
