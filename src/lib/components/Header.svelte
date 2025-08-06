@@ -7,11 +7,12 @@
 		<img src="images/logo_full.png" alt="Logo" class="h-20 w-72" />
 	</a>
 	<nav>
+    <!-- Navigation links -->
 		<ul class="flex space-x-8">
 			{#each links as link}
-				<li>
-					<a href={link.href} class="btn btn-primary">{link.label}</a>
-				</li>
+				<a href={link.href} class="btn btn-slide-show">
+					<span class="btn-slide-show-inner">{link.label}</span>
+				</a>
 			{/each}
 		</ul>
 	</nav>
