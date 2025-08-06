@@ -1,8 +1,8 @@
 <script lang="ts">
+	let { children } = $props();
+
 	import '../app.css';
 	import { Header } from '$lib';
-
-	let { children } = $props();
 
 	const links = [
 		{ href: '/sainte-pop', label: 'Sainté Pop’' },
@@ -13,4 +13,5 @@
 </script>
 
 <Header {links} />
+
 {@render children()}
