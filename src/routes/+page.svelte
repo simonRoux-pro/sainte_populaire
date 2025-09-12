@@ -1,9 +1,9 @@
-<script lang="ts">
+<script>
+    import Hero from '$lib/components/Hero.svelte';
+    import Discover from '$lib/components/Discover.svelte';
 </script>
 
-<div class="flex items-center justify-center w-full h-full bg-gray-500">
-	<h1>Bienvenue sur SaintePop</h1>
-	<p>
-		Ceci est la page d'accueil de votre site. Vous pouvez personnaliser ce contenu directement ici.
-	</p>
-</div>
+<Hero />
+<Discover />
+
+<!-- Le footer est déjà dans le layout -->
