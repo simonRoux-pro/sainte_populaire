@@ -2,38 +2,40 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-type Article = {
-    slug: string;
-    title: string;
-    summary: string;
-    date: string;
-};
+const articlesDir = 'content/articles';
 
-export async function load(): Promise<{ articles: Article[] }> {
-    const articlesDir = 'content/articles';
-    const files = fs.readdirSync(articlesDir);
+export async function load() {
+    // Markdown articles
+    const mdFiles = fs.readdirSync(articlesDir).filter(f => f.endsWith('.md'));
+    const mdArticles = mdFiles.map(filename => {
+        const filePath = path.join(articlesDir, filename);
+        const file = fs.readFileSync(filePath, 'utf-8');
+        const { data } = matter(file);
+        return {
+            type: 'markdown',
+            slug: filename.replace(/\.md$/, ''),
+            title: data.title,
+            date: data.date,
+            summary: data.summary,
+        };
+    });
 
-    const articles: Article[] = files
-        .filter((file) => file.endsWith('.md'))
-        .map((file) => {
-            const fullPath = path.join(articlesDir, file);
-            const fileContents = fs.readFileSync(fullPath, 'utf8');
-            const { data } = matter(fileContents);
+    // PDF articles (JSON metadata)
+    const jsonFiles = fs.readdirSync(articlesDir).filter(f => f.endsWith('.json'));
+    const pdfArticles = jsonFiles.map(filename => {
+        const filePath = path.join(articlesDir, filename);
+        const meta = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        return {
+            type: 'pdf',
+            title: meta.title,
+            date: meta.date,
+            summary: meta.summary,
+            file: meta.file
+        };
+    });
 
-            return {
-                slug: file.replace(/\.md$/, ''),
-                title: data.title as string,
-                summary: data.summary as string,
-                date: data.date as string
-            };
-        })
-        .sort((a, b) => {
-            const dateA = new Date(a.date).getTime() || 0;
-            const dateB = new Date(b.date).getTime() || 0;
-            return dateB - dateA;
-        });
+    // Mélange et trie par date décroissante
+    const articles = [...mdArticles, ...pdfArticles].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    return {
-        articles
-    };
+    return { articles };
 }

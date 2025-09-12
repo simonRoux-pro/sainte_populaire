@@ -344,3 +344,41 @@ a:focus, button:focus, .discover-card:focus-within {
   outline: 2px solid var(--rouge-ouvrier);
   outline-offset: 2px;
 }
+
+.actualites-section {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+}
+.articles-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.articles-list li {
+    margin-bottom: 2rem;
+}
+.article-link {
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    font-size: 1.2rem;
+    color: var(--rouge-ouvrier, #c41e3a);
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.article-link:hover, .article-link:focus {
+    color: var(--rouge-ouvrier-hover, #a00d2a);
+    text-decoration: underline;
+}
+.date {
+    display: block;
+    color: var(--gris-acier, #6c757d);
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+}
+.summary {
+    color: var(--noir-charbon, #1a1a1a);
+    font-family: 'Lora', serif;
+    margin-top: 0.4rem;
+    font-size: 1.05rem;
+}
