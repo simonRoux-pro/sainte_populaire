@@ -8,5 +8,12 @@
     <p class="hero-sub">
         Sainte Populaire, c’est un collectif qui lutte pour une société juste, solidaire et ancrée dans l’action populaire.
     </p>
-    <button class="hero-cta">DÉCOUVRIR NOS ACTIONS, NOS VALEURS ET COMMENT PARTICIPER !</button>
+    <a
+        class="hero-cta"
+        href="https://framaforms.org/comite-de-soutien-de-sainte-populaire-municipales-2026-a-saint-etienne-1746463242"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        NOUS SOUTENIR
+    </a>
 </section>
