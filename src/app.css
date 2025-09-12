@@ -382,3 +382,45 @@ a:focus, button:focus, .discover-card:focus-within {
     margin-top: 0.4rem;
     font-size: 1.05rem;
 }
+
+/* Connexion admin dans le thème général */
+.pdf-form {
+    max-width: 420px;
+    margin: 2rem auto;
+    background: var(--blanc-cassé, #f8f9fa);
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 16px rgba(30,30,30,0.07);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.pdf-form label {
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    font-weight: bold;
+    color: var(--rouge-ouvrier, #c41e3a);
+    margin-bottom: 0.2rem;
+}
+.pdf-form input[type="text"],
+.pdf-form input[type="password"] {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border: 1.5px solid var(--gris-acier, #6c757d);
+    border-radius: 0.5rem;
+    background: #fff;
+    color: var(--noir-charbon, #1a1a1a);
+}
+.hero-cta {
+    margin-top: 1rem;
+}
+.form-error {
+    color: #c41e3a;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
