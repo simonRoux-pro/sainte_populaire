@@ -23,3 +23,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 src/lib/components/SaintePop.code-workspace
 .vscode/SaintePop.code-workspace
+
+# Articles PDF et JSON générés
+static/articles/*
