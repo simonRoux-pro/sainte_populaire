@@ -43,7 +43,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-title);
   font-weight: 700;
   margin-top: 0;
-  color: var(--rouge-ouvrier);
+  color: var(--blanc-cassé);
   letter-spacing: 1px;
 }
 
@@ -545,7 +545,6 @@ nav .dropdown-sub:focus-within > .dropdown-content-sub {
     gap: 2.5rem;
     align-items: flex-start;
     max-width: 98vw;      /* Presque toute la largeur de l'écran */
-    width: 120%;
     margin: 3rem auto 0 auto; /* Centré */
     padding: 0 1vw;       /* Un peu d'espace sur les côtés */
     box-sizing: border-box;
@@ -567,7 +566,7 @@ nav .dropdown-sub:focus-within > .dropdown-content-sub {
     box-shadow: 0 2px 16px rgba(30,30,30,0.07);
     padding: 1.5rem 1rem;
     min-width: 320px;
-    max-width: 520px;
+    max-width: 750px;
     margin-top: 2.5rem;
 }
 .framaform-aside h2 {
@@ -631,7 +630,8 @@ nav .dropdown-sub:focus-within > .dropdown-content-sub {
 .article-title {
     font-family: 'Roboto Condensed', Arial, sans-serif;
     font-size: 1.25rem;
-    color: var(--rouge-ouvrier, #c41e3a);
+    color: var(--blanc-cassé);
+    font-weight: bold;
     margin: 0 0 0.5rem 0;
 }
 .summary {
