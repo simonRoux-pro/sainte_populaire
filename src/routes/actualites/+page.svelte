@@ -22,7 +22,7 @@
 </script>
 <div class="actus-frama-flex">
     <section class="actualites-section">
-        <h2 class="discover-title">ACTUALITÉS</h2>
+        <h2 class="actualites-title">ACTUALITÉS</h2>
         <div class="articles-grid">
             {#each data.articles as article}
                 <div class="article-card">

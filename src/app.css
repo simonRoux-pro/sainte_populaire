@@ -726,3 +726,12 @@ nav .dropdown-sub:focus-within > .dropdown-content-sub {
         height: 60vw;
     }
 }
+.dropdown-title {
+    display: block;
+    padding: 0.5em 1em;
+    color: var(--noir-charbon, #1a1a1a);
+    font-weight: bold;
+    cursor: default;
+    background: none;
+    user-select: none;
+}

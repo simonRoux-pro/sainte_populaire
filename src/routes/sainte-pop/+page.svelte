@@ -5,5 +5,3 @@
 
 <Hero />
 <Discover />
-
-<!-- Le footer est déjà dans le layout -->

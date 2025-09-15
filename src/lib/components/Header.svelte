@@ -31,19 +31,25 @@
         };
     });
 
-    // Définition des liens de navigation
+    // Définition des types pour les liens de navigation
+    /**
+     * @typedef {Object} NavLink
+     * @property {string} label
+     * @property {string} [href]
+     * @property {NavLink[]} [submenu]
+     */
+    /** @type {NavLink[]} */
     const links = [
-        { href: '/', label: 'Accueil' },
         { href: '/actualites', label: 'Actualités' },
         {
-            label: 'sainte Pop',
+            label: 'Sainte Pop',
             href: '/sainte-pop',
             submenu: [
                 { href: '/sainte-pop', label: "C'est quoi ?" },
                 { href: '/sainte-pop/organisation', label: "Organisation du mouvement" },
                 {
-                    label: 'Les pôles',
-                    href: '/sainte-pop/poles',
+                    label: 'LES PÔLES',
+                    // href: '/sainte-pop/poles',
                     submenu: [
                         { href: '/sainte-pop/poles/communication', label: 'Pôle Communication' },
                         { href: '/sainte-pop/poles/relation', label: 'Pôle Relation' },
@@ -83,21 +89,7 @@
                     <div class="dropdown">
                         <a
                             href={link.href ?? '#'}
-                            class:active={
-                                $page.url.pathname === (link.href ?? '#') ||
-                                (
-                                    link.submenu &&
-                                    link.href &&
-                                    $page.url.pathname.startsWith(link.href) &&
-                                    link.href !== '/' &&
-                                    !links.some(l =>
-                                        l !== link &&
-                                        l.href &&
-                                        $page.url.pathname.startsWith(l.href) &&
-                                        l.href.length > (link.href ? link.href.length : 0)
-                                    )
-                                )
-                            }
+                            class:active={link.href && $page.url.pathname.startsWith(link.href)}
                         >
                             {link.label}
                         </a>
@@ -105,7 +97,11 @@
                             {#each link.submenu as sub}
                                 {#if sub.submenu}
                                     <div class="dropdown-sub">
-                                        <a href={sub.href ?? '#'}>{sub.label}</a>
+                                        {#if sub.href}
+                                            <a href={sub.href}>{sub.label}</a>
+                                        {:else}
+                                            <span class="dropdown-title">{sub.label}</span>
+                                        {/if}
                                         <div class="dropdown-content-sub">
                                             {#each sub.submenu as subsub}
                                                 <a href={subsub.href}>{subsub.label}</a>
