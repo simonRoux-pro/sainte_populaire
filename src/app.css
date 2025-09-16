@@ -3,11 +3,11 @@
 
 /* Palette Sainte Populaire */
 :root {
-  --rouge-ouvrier: #c41e3a;
+  /* --rouge-ouvrier: #c41e3a;
   --rouge-ouvrier-hover: #a00d2a;
-  --noir-charbon: #1a1a1a;
+  --noir-charbon: #1a1a1a; */
   --gris-acier: #6c757d;
-  --blanc-cassé: #f8f9fa;
+  /* --blanc-cassé: #f8f9fa; */
   --terre-ocre: #a52a2a;
   --radius: 2.2rem;
   --shadow: 0 4px 24px rgba(30,30,30,0.07);
@@ -15,9 +15,17 @@
   --font-body: 'Lora', serif;
 }
 
+:root {
+    --rouge-ouvrier: #c41e3a;
+    --rouge-ouvrier-hover: #a00d2a;
+    --blanc-cassé: #f8f9fa;
+    --noir-charbon: #23272a;
+    --vert-fond: #e6f2ee;
+}
+
 html, body {
-    background: #0B3D2E;
-    color: #f8f9fa;
+    background: #e6f2ee; /* vert pastel clair */
+    color: var(--noir-charbon, #23272a);
     font-family: 'Lora', serif;
     min-height: 100vh;
 	margin: 0;
@@ -43,7 +51,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-title);
   font-weight: 700;
   margin-top: 0;
-  color: var(--blanc-cassé);
+  color: var(--noir-charbon);
   letter-spacing: 1px;
 }
 
@@ -245,7 +253,7 @@ nav a:hover, nav a:focus {
 .discover-title {
   font-family: var(--font-title);
   font-size: 1.5rem;
-  color: var(--blanc-cassé);
+  color: var(--noir);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 2.5rem;

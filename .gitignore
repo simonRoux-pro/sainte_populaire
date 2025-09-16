@@ -26,3 +26,5 @@ src/lib/components/SaintePop.code-workspace
 
 # Articles PDF et JSON générés
 static/articles/*
+
+ressources/*
