@@ -17,7 +17,7 @@
                     </svg>
                 </div>
                 <h3>Email</h3>
-                <p>Pour toute question ou information</p>
+                <p>Pour toute question</p>
                 <a href="mailto:contact@saintepopulaire.fr" class="contact-link">
                     contact@saintepopulaire.fr
                 </a>
