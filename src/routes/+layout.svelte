@@ -10,11 +10,13 @@
         --blanc: #fff;
         --noir: #000;
         --beige: #F5E9DD;
+        --vert-fond: #e6f2ee;
+        --beige-fond: #f8f6f0;
         --max-width: 1200px;
     }
     :global(body) {
         font-family: 'Montserrat', Arial, sans-serif;
-        background: var(--blanc);
+        background: var(--beige-fond);
         color: var(--noir);
     }
     .main-container {

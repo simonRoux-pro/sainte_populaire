@@ -87,11 +87,12 @@
     }
 
     .contact-card {
-        background: var(--blanc-cassé, #f8f9fa);
+        background: var(--blanc);
         border-radius: 1.2rem;
         padding: 2rem 1.5rem;
         box-shadow: 0 2px 16px rgba(30,30,30,0.07);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 1px solid rgba(230, 242, 238, 0.5);
     }
 
     .contact-card:hover {

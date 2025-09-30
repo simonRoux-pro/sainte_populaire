@@ -101,13 +101,14 @@
 .pdf-form {
     max-width: 420px;
     margin: 2rem auto;
-    background: var(--blanc-cassé, #f8f9fa);
+    background: var(--blanc);
     border-radius: 1.2rem;
     box-shadow: 0 2px 16px rgba(30,30,30,0.07);
     padding: 2rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+    border: 1px solid rgba(230, 242, 238, 0.5);
 }
 .form-group {
     display: flex;
