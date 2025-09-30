@@ -223,8 +223,22 @@
     }
 
     @media (max-width: 768px) {
+        .add-event-section {
+            padding: 0 1rem;
+        }
+        .event-form {
+            padding: 1.5rem;
+        }
         .form-row {
             grid-template-columns: 1fr;
+        }
+        .event-form input[type="text"],
+        .event-form input[type="date"],
+        .event-form input[type="time"],
+        .event-form input[type="url"],
+        .event-form select,
+        .event-form textarea {
+            font-size: 16px; /* Prevents zoom on iOS */
         }
     }
 </style>

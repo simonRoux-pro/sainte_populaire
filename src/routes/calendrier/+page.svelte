@@ -497,12 +497,34 @@ END:VCALENDAR`;
     }
 
     @media (max-width: 768px) {
+        .calendar-section {
+            padding: 0 1rem;
+        }
         .events-grid {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
-        
+        .event-card {
+            padding: 1.5rem;
+        }
+        .event-title {
+            font-size: 1.2rem;
+        }
         .event-actions {
             justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+        .calendar-btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+        }
+        .admin-controls {
+            margin: 1.5rem 0;
+        }
+        .hero-cta {
+            width: 100%;
+            text-align: center;
         }
     }
 </style>

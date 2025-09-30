@@ -24,6 +24,12 @@
         margin: 0 auto; */
         padding: 0 1.5rem;
     }
+    
+    @media (max-width: 768px) {
+        .main-container {
+            padding: 0 1rem;
+        }
+    }
     footer {
         background: var(--vert);
         color: var(--blanc);
@@ -51,6 +57,27 @@
     }
     .footer-social a:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
     .footer-social a:focus-visible { outline: 3px solid #ffffff; outline-offset: 3px; }
+    
+    @media (max-width: 768px) {
+        footer {
+            padding: 2rem 1rem 1rem 1rem;
+        }
+        .footer-social a {
+            --size: 40px;
+            margin: 0 0.3rem;
+        }
+        .footer-social svg {
+            width: 20px;
+            height: 20px;
+        }
+        .footer-contact {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+        }
+        .footer-contact h3 {
+            font-size: 1rem;
+        }
+    }
 
     /* Gradients par réseau, style badges ronds */
     .footer-social a.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }

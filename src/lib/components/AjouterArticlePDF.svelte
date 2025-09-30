@@ -149,4 +149,17 @@
     font-weight: bold;
     margin-top: 0.5rem;
 }
+
+@media (max-width: 768px) {
+    .pdf-form {
+        margin: 1rem auto;
+        padding: 1.5rem 1rem;
+    }
+    .pdf-form input[type="text"],
+    .pdf-form input[type="date"],
+    .pdf-form textarea,
+    .pdf-form input[type="file"] {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
 </style>

@@ -149,4 +149,24 @@
         color: var(--vert-hover, #0B3D2E);
         transform: translateY(-1px);
     }
+
+    @media (max-width: 768px) {
+        .contact-section {
+            padding: 0 1rem;
+        }
+        .contact-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .contact-card {
+            padding: 1.5rem 1rem;
+        }
+        .contact-card h3 {
+            font-size: 1.1rem;
+        }
+        .contact-link {
+            width: 100%;
+            text-align: center;
+        }
+    }
 </style>
