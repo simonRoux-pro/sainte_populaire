@@ -6,6 +6,8 @@
     let uploading = false;
     let success = false;
     let error = '';
+    let imageFile: File | null = null;
+    let link = '';
 
     function handleFileChange(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -29,6 +31,8 @@
         formData.append('date', date);
         formData.append('summary', summary);
         formData.append('pdf', pdfFile);
+        if (imageFile) formData.append('image', imageFile);
+        formData.append('link', link);
 
         const res = await fetch('/api/upload-pdf', {
             method: 'POST',
@@ -41,8 +45,12 @@
             title = '';
             date = '';
             summary = '';
+            imageFile = null;
+            link = '';
             pdfFile = null;
             (document.getElementById('pdf-input') as HTMLInputElement).value = '';
+            const imgInput = document.getElementById('image-input') as HTMLInputElement;
+            if (imgInput) imgInput.value = '';
         } else {
             const data = await res.json();
             error = data.error || "Erreur lors de l'envoi.";
@@ -69,6 +77,14 @@
             <label for="pdf-input">Fichier PDF</label>
             <input id="pdf-input" type="file" accept="application/pdf" on:change={handleFileChange} required />
         </div>
+        <div class="form-group">
+            <label for="image-input">Image (optionnel)</label>
+            <input id="image-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" on:change={(e:any)=>{ imageFile = e.currentTarget.files?.[0] || null; }} />
+        </div>
+<div class="form-group">
+    <label for="link">Lien externe</label>
+    <input id="link" type="text" bind:value={link} placeholder="Lien externe (optionnel)" />
+</div>
         <button type="submit" class="hero-cta" disabled={uploading}>
             {uploading ? "Envoi en cours..." : "Ajouter l'article PDF"}
         </button>

@@ -7,6 +7,8 @@ export const POST: RequestHandler = async ({ request }) => {
     const title = formData.get('title') as string;
     const date = formData.get('date') as string;
     const summary = formData.get('summary') as string;
+    const imageFile = formData.get('image') as File | null;
+    const link = (formData.get('link') as string) || '';
     const file = formData.get('pdf') as File;
 
     if (!title || !date || !summary || !file) {
@@ -21,6 +23,23 @@ export const POST: RequestHandler = async ({ request }) => {
     const arrayBuffer = await file.arrayBuffer();
     fs.writeFileSync(pdfPath, Buffer.from(arrayBuffer));
 
+    // Optionnel: enregistrer l'image dans static/articles/
+    let imagePublicPath: string | undefined = undefined;
+    if (imageFile && typeof imageFile !== 'string') {
+        const imgDir = path.resolve('static/articles');
+        if (!fs.existsSync(imgDir)) fs.mkdirSync(imgDir, { recursive: true });
+        const imgExt = (imageFile.name.match(/\.[^.]+$/)?.[0] || '').toLowerCase();
+        const allowed = ['.png', '.jpg', '.jpeg', '.webp', '.gif'];
+        if (!allowed.includes(imgExt)) {
+            return new Response(JSON.stringify({ error: "Format d'image non supporté" }), { status: 400 });
+        }
+        const imgFileName = Date.now() + '-' + imageFile.name.replace(/\s+/g, '_');
+        const imgPath = path.join(imgDir, imgFileName);
+        const imgArrayBuffer = await imageFile.arrayBuffer();
+        fs.writeFileSync(imgPath, Buffer.from(imgArrayBuffer));
+        imagePublicPath = `/articles/${imgFileName}`;
+    }
+
     // Génère le JSON dans content/articles/
     const jsonDir = path.resolve('content/articles');
     if (!fs.existsSync(jsonDir)) fs.mkdirSync(jsonDir, { recursive: true });
@@ -29,6 +48,8 @@ export const POST: RequestHandler = async ({ request }) => {
         date,
         summary,
         file: `/articles/${pdfFileName}`,
+        image: imagePublicPath,
+        link,
         type: 'pdf'
     };
     const jsonFileName = pdfFileName.replace(/\.pdf$/i, '.json');

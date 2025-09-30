@@ -18,7 +18,18 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         const pdfPath = path.resolve('static/articles', pdfName);
         const jsonPath = path.resolve('content/articles', pdfName.replace(/\.pdf$/i, '.json'));
         if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-        if (fs.existsSync(jsonPath)) fs.unlinkSync(jsonPath);
+        if (fs.existsSync(jsonPath)) {
+            try {
+                const meta = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+                const image = meta?.image as string | undefined;
+                if (image) {
+                    const imgName = image.split('/').pop();
+                    const imgPath = path.resolve('static/articles', imgName!);
+                    if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+                }
+            } catch {}
+            fs.unlinkSync(jsonPath);
+        }
     }
     return new Response(JSON.stringify({ success: true }), { status: 200 });
 };

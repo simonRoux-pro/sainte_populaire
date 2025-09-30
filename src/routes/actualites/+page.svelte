@@ -1,14 +1,35 @@
 <script lang="ts">
     export let data: {
+        admin: boolean;
         articles: Array<
             | { type: 'markdown'; slug: string; title: string; date: string; summary: string }
-            | { type: 'pdf'; title: string; date: string; summary: string; file: string }
+            | { type: 'pdf'; title: string; date: string; summary: string; file: string; image?: string; link?: string }
         >;
     };
 
     let pdfPreview: string | null = null;
     let pdfTitle: string | null = null;
+    let isAdmin = data.admin;
 
+    async function deleteArticle(article: { type: 'markdown'; slug: string } | { type: 'pdf'; file: string }) {
+        if (!confirm("Supprimer cet article ?")) return;
+        const payload =
+            'slug' in article
+                ? { type: 'markdown', slug: article.slug }
+                : { type: 'pdf', file: (article as { type: 'pdf'; file: string }).file };
+
+        const res = await fetch('/api/delete-article', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+            // Actualise la liste ou retire l'article du tableau
+            location.reload();
+        } else {
+            alert("Erreur lors de la suppression.");
+        }
+    }
     function openPdfPreview(file: string, title: string) {
         pdfPreview = file;
         pdfTitle = title;
@@ -18,6 +39,13 @@
         pdfPreview = null;
         pdfTitle = null;
         document.body.style.overflow = '';
+    }
+
+    function onBackdropKeydown(event: KeyboardEvent) {
+        if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            closePdfPreview();
+        }
     }
 </script>
 <div class="actus-frama-flex">
@@ -33,6 +61,15 @@
                         {/if}
                     </div>
                     <h3 class="article-title">{article.title}</h3>
+                    {#if article.type === 'pdf' && article.image}
+                        {#if article.link}
+                            <a href={article.link} target="_blank" rel="noopener" class="article-image-link" title="Ouvrir le lien">
+                                <img class="article-image" src={article.image} alt={article.title} />
+                            </a>
+                        {:else}
+                            <img class="article-image" src={article.image} alt={article.title} />
+                        {/if}
+                    {/if}
                     <p class="summary">{article.summary}</p>
                     <div class="article-actions">
                         {#if article.type === 'markdown'}
@@ -42,6 +79,17 @@
                                 Prévisualiser
                             </button>
                             <a href={article.file} target="_blank" rel="noopener" class="pdf-ext-link" title="Ouvrir dans un nouvel onglet">↗</a>
+                        {/if}
+                        {#if isAdmin}
+                            <button class="delete-btn" title="Supprimer l'article" aria-label="Supprimer l'article" on:click={() => deleteArticle(article as any)}>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
                         {/if}
                     </div>
                 </div>
@@ -63,11 +111,11 @@
 </div>
 
 {#if pdfPreview}
-    <div class="pdf-modal" on:click={closePdfPreview}>
-        <div class="pdf-modal-content" on:click|stopPropagation>
+    <div class="pdf-modal" role="button" tabindex="0" aria-label="Fermer la prévisualisation" on:click={closePdfPreview} on:keydown={onBackdropKeydown}>
+        <div class="pdf-modal-content" role="dialog" aria-modal="true" tabindex="-1" on:click|stopPropagation on:keydown={(e) => e.key === 'Escape' && closePdfPreview()}>
             <button class="close-btn" on:click={closePdfPreview} aria-label="Fermer">✕</button>
             <h3 style="margin-bottom:1rem;">{pdfTitle}</h3>
-            <iframe src={pdfPreview} width="100%" height="600px" style="border:none; background:#fff;"></iframe>
+            <iframe src={pdfPreview} width="100%" height="600px" style="border:none; background:#fff;" title={pdfTitle || 'Aperçu PDF'}></iframe>
             <div style="text-align:center;margin-top:1rem;">
                 <a href={pdfPreview} target="_blank" rel="noopener noreferrer" class="hero-cta">Ouvrir dans un nouvel onglet</a>
             </div>
@@ -76,5 +124,19 @@
 {/if}
 
 <style>
-
+    .article-actions { display:flex; align-items:center; gap: 0.5rem; }
+    .article-image { width: 100%; height: auto; border-radius: 0.6rem; margin: 0.25rem 0 0.5rem; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+    .article-image-link { display:block; }
+    .delete-btn {
+        margin-left: auto;
+        background: transparent;
+        border: none;
+        padding: 0.25rem;
+        color: #c41e3a;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: color .15s ease, transform .1s ease, background-color .15s ease;
+    }
+    .delete-btn:hover { color: #a3132b; background-color: rgba(196,30,58,0.08); }
+    .delete-btn:focus-visible { outline: 2px solid #c41e3a; outline-offset: 2px; }
 </style>

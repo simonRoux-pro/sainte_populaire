@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import type { PageServerLoad } from './$types';
+import { isAdmin } from '$lib/server/auth';
 
 const articlesDir = 'content/articles';
 
-export async function load() {
+export const load: PageServerLoad = async ({ cookies }) => {
     // Markdown articles
     const mdFiles = fs.readdirSync(articlesDir).filter(f => f.endsWith('.md'));
     const mdArticles = mdFiles.map(filename => {
@@ -30,12 +32,16 @@ export async function load() {
             title: meta.title,
             date: meta.date,
             summary: meta.summary,
-            file: meta.file
+            file: meta.file,
+            image: meta.image,
+            link: meta.link
         };
     });
 
     // Mélange et trie par date décroissante
     const articles = [...mdArticles, ...pdfArticles].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    return { articles };
-}
+    const admin = isAdmin(cookies);
+
+    return { articles, admin };
+};
