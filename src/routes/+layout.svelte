@@ -31,6 +31,12 @@
             padding: 0 1rem;
         }
     }
+    
+    @media (max-width: 768px) {
+        .main-container {
+            padding: 0 1rem;
+        }
+    }
     footer {
         background: var(--vert);
         color: var(--blanc);
