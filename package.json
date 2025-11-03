@@ -1,5 +1,6 @@
 {
 	"name": "saintepop",
+	"homepage": "https://saintepopulaire.fr",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -16,9 +17,9 @@
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
-		"@sveltejs/adapter-netlify": "^5.1.0",
-		"@sveltejs/adapter-static": "^3.0.8",
-		"@sveltejs/kit": "^2.22.0",
+		"@sveltejs/adapter-netlify": "^0.0.13",
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/kit": "^2.47.1",
 		"@sveltejs/vite-plugin-svelte": "^6.0.0",
 		"@tailwindcss/vite": "^4.0.0",
 		"@types/node": "^24.1.0",
