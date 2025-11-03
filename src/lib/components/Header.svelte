@@ -68,7 +68,8 @@
                 { href: '/programme/quizz', label: 'Quizz' }
             ]
         },
-        { href: '/agir', label: 'Agir' }
+        { href: '/calendrier', label: 'Calendrier' },
+        { href: '/contact', label: 'Contact' }
     ];
 
     function logout() {

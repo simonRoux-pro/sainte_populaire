@@ -101,13 +101,14 @@
 .pdf-form {
     max-width: 420px;
     margin: 2rem auto;
-    background: var(--blanc-cassé, #f8f9fa);
+    background: var(--blanc);
     border-radius: 1.2rem;
     box-shadow: 0 2px 16px rgba(30,30,30,0.07);
     padding: 2rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+    border: 1px solid rgba(230, 242, 238, 0.5);
 }
 .form-group {
     display: flex;
@@ -147,5 +148,18 @@
     color: #0B3D2E;
     font-weight: bold;
     margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .pdf-form {
+        margin: 1rem auto;
+        padding: 1.5rem 1rem;
+    }
+    .pdf-form input[type="text"],
+    .pdf-form input[type="date"],
+    .pdf-form textarea,
+    .pdf-form input[type="file"] {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
 }
 </style>
