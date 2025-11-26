@@ -1,0 +1,39 @@
+[
+  {
+    "id": "1757882354735",
+    "type": "pdf",
+    "title": "Super article",
+    "date": "2025-09-14",
+    "summary": "C'est un super article qui raconte des trucs de fou et tout et en gros on peut tester le résumé avec pleins d'infos",
+    "file": "/articles/1757882354735-page_d'accueil-1.pdf",
+    "slug": "super-article",
+    "createdAt": "2025-11-26T11:18:06.355Z",
+    "updatedAt": "2025-11-26T11:18:06.356Z"
+  },
+  {
+    "id": "1759263705107",
+    "type": "pdf",
+    "title": "Test image ",
+    "date": "2025-12-10",
+    "summary": "RTestzr ezr aezr ze zzer zer  zze rrzeezrrezreh erfgbdf dfqf sdgtf rthet bvezfr",
+    "file": "/articles/1759263705107-Lettre_ouverte_à_la_FI_-_19_09.pdf",
+    "image": "/articles/1759263705109-Perdriau---Facebook.png",
+    "link": "https://www.twitch.tv/traytonlol",
+    "slug": "test-image",
+    "createdAt": "2025-11-26T11:18:06.356Z",
+    "updatedAt": "2025-11-26T11:18:06.356Z"
+  },
+  {
+    "id": "1759263771718",
+    "type": "pdf",
+    "title": "test set es",
+    "date": "2025-10-23",
+    "summary": "fefz erf  zeffffez  zert erzgezr",
+    "file": "/articles/1759263771718-proton-recovery-kit.pdf",
+    "image": "/articles/1759263771719-4e-Assemblee-Populaire---Facebook.png",
+    "link": "https://www.twitch.tv/hiro_llol",
+    "slug": "test-set-es",
+    "createdAt": "2025-11-26T11:18:06.356Z",
+    "updatedAt": "2025-11-26T11:18:06.356Z"
+  }
+]

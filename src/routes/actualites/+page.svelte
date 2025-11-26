@@ -1,27 +1,37 @@
 <script lang="ts">
+    type Article = {
+        id: string;
+        type: 'markdown' | 'pdf';
+        title: string;
+        date: string;
+        summary: string;
+        slug?: string;
+        body?: string;
+        file?: string;
+        image?: string;
+        link?: string;
+    };
+
     export let data: {
         admin: boolean;
-        articles: Array<
-            | { type: 'markdown'; slug: string; title: string; date: string; summary: string }
-            | { type: 'pdf'; title: string; date: string; summary: string; file: string; image?: string; link?: string }
-        >;
+        articles: Article[];
     };
 
     let pdfPreview: string | null = null;
     let pdfTitle: string | null = null;
     let isAdmin = data.admin;
 
-    async function deleteArticle(article: { type: 'markdown'; slug: string } | { type: 'pdf'; file: string }) {
+    async function deleteArticle(article: Article) {
         if (!confirm("Supprimer cet article ?")) return;
-        const payload =
-            'slug' in article
-                ? { type: 'markdown', slug: article.slug }
-                : { type: 'pdf', file: (article as { type: 'pdf'; file: string }).file };
+        if (!article.id) {
+            alert("Impossible de supprimer cet article (identifiant manquant).");
+            return;
+        }
 
         const res = await fetch('/api/delete-article', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ id: article.id })
         });
         if (res.ok) {
             // Actualise la liste ou retire l'article du tableau
@@ -72,10 +82,10 @@
                     {/if}
                     <p class="summary">{article.summary}</p>
                     <div class="article-actions">
-                        {#if article.type === 'markdown'}
+                        {#if article.type === 'markdown' && article.slug}
                             <a class="hero-cta" href={`/actualites/${article.slug}`}>Lire</a>
-                        {:else if article.type === 'pdf'}
-                            <button class="hero-cta" type="button" on:click={() => openPdfPreview(article.file, article.title)}>
+                        {:else if article.type === 'pdf' && article.file}
+                            <button class="hero-cta" type="button" on:click={() => openPdfPreview(article.file!, article.title)}>
                                 Prévisualiser
                             </button>
                             <a href={article.file} target="_blank" rel="noopener" class="pdf-ext-link" title="Ouvrir dans un nouvel onglet">↗</a>

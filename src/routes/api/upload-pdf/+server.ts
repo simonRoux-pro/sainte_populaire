@@ -1,60 +1,83 @@
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import fs from 'fs';
-import path from 'path';
+import { isAdmin } from '$lib/server/auth';
+import {
+	StorageNotConfiguredError,
+	saveArticle,
+	uploadAsset
+} from '$lib/server/db';
+import { sanitizeFilename, slugify } from '$lib/server/strings';
 
-export const POST: RequestHandler = async ({ request }) => {
-    const formData = await request.formData();
-    const title = formData.get('title') as string;
-    const date = formData.get('date') as string;
-    const summary = formData.get('summary') as string;
-    const imageFile = formData.get('image') as File | null;
-    const link = (formData.get('link') as string) || '';
-    const file = formData.get('pdf') as File;
+const allowedImageTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'];
 
-    if (!title || !date || !summary || !file) {
-        return new Response(JSON.stringify({ error: 'Champs manquants' }), { status: 400 });
-    }
+export const POST: RequestHandler = async ({ request, cookies }) => {
+	if (!isAdmin(cookies)) {
+		return json({ error: 'Non autorisé' }, { status: 401 });
+	}
 
-    // Enregistre le PDF dans static/articles/
-    const pdfDir = path.resolve('static/articles');
-    if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
-    const pdfFileName = Date.now() + '-' + file.name.replace(/\s+/g, '_');
-    const pdfPath = path.join(pdfDir, pdfFileName);
-    const arrayBuffer = await file.arrayBuffer();
-    fs.writeFileSync(pdfPath, Buffer.from(arrayBuffer));
+	try {
+		const formData = await request.formData();
+		const title = formData.get('title') as string;
+		const date = formData.get('date') as string;
+		const summary = formData.get('summary') as string;
+		const imageFile = formData.get('image');
+		const link = (formData.get('link') as string) || '';
+		const pdfFile = formData.get('pdf');
 
-    // Optionnel: enregistrer l'image dans static/articles/
-    let imagePublicPath: string | undefined = undefined;
-    if (imageFile && typeof imageFile !== 'string') {
-        const imgDir = path.resolve('static/articles');
-        if (!fs.existsSync(imgDir)) fs.mkdirSync(imgDir, { recursive: true });
-        const imgExt = (imageFile.name.match(/\.[^.]+$/)?.[0] || '').toLowerCase();
-        const allowed = ['.png', '.jpg', '.jpeg', '.webp', '.gif'];
-        if (!allowed.includes(imgExt)) {
-            return new Response(JSON.stringify({ error: "Format d'image non supporté" }), { status: 400 });
-        }
-        const imgFileName = Date.now() + '-' + imageFile.name.replace(/\s+/g, '_');
-        const imgPath = path.join(imgDir, imgFileName);
-        const imgArrayBuffer = await imageFile.arrayBuffer();
-        fs.writeFileSync(imgPath, Buffer.from(imgArrayBuffer));
-        imagePublicPath = `/articles/${imgFileName}`;
-    }
+		if (!title || !date || !summary || !pdfFile || typeof pdfFile === 'string') {
+			return json({ error: 'Champs manquants' }, { status: 400 });
+		}
 
-    // Génère le JSON dans content/articles/
-    const jsonDir = path.resolve('content/articles');
-    if (!fs.existsSync(jsonDir)) fs.mkdirSync(jsonDir, { recursive: true });
-    const jsonData = {
-        title,
-        date,
-        summary,
-        file: `/articles/${pdfFileName}`,
-        image: imagePublicPath,
-        link,
-        type: 'pdf'
-    };
-    const jsonFileName = pdfFileName.replace(/\.pdf$/i, '.json');
-    const jsonPath = path.join(jsonDir, jsonFileName);
-    fs.writeFileSync(jsonPath, JSON.stringify(jsonData, null, 2), 'utf-8');
+		if (pdfFile.type !== 'application/pdf') {
+			return json({ error: 'Le fichier doit être un PDF.' }, { status: 400 });
+		}
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+		const id = Date.now().toString();
+		const now = new Date().toISOString();
+
+		const pdfArrayBuffer = await pdfFile.arrayBuffer();
+		const pdfKey = `articles/${id}/${sanitizeFilename(pdfFile.name || 'article.pdf')}`;
+		const pdfAsset = await uploadAsset(pdfKey, pdfArrayBuffer, 'application/pdf');
+
+		let imageUrl: string | undefined;
+		let imageStoragePath: string | undefined;
+
+		if (imageFile && imageFile instanceof File) {
+			if (!allowedImageTypes.includes(imageFile.type)) {
+				return json({ error: "Format d'image non supporté" }, { status: 400 });
+			}
+			const imageArrayBuffer = await imageFile.arrayBuffer();
+			const imgKey = `articles/${id}/${sanitizeFilename(imageFile.name)}`;
+			const imgAsset = await uploadAsset(imgKey, imageArrayBuffer, imageFile.type || 'image/png');
+			imageUrl = imgAsset.url;
+			imageStoragePath = imgAsset.pathname;
+		}
+
+		const article = await saveArticle({
+			id,
+			type: 'pdf',
+			title,
+			date,
+			summary,
+			file: pdfAsset.url,
+			image: imageUrl,
+			link: link || undefined,
+			slug: slugify(title),
+			createdAt: now,
+			updatedAt: now,
+			storage: {
+				file: pdfAsset.pathname,
+				image: imageStoragePath
+			}
+		});
+
+		return json({ success: true, article }, { status: 201 });
+	} catch (error) {
+		if (error instanceof StorageNotConfiguredError) {
+			return json({ error: error.message }, { status: 503 });
+		}
+
+		console.error('Erreur upload article PDF', error);
+		return json({ error: "Erreur lors de l'envoi du PDF" }, { status: 500 });
+	}
 };
