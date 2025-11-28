@@ -129,6 +129,10 @@
                     aria-current={$page.url.pathname === '/admin/ajouter-pdf' ? "page" : undefined}
                     on:click={() => (menuOpen = false)}
                 >Écrire</a>
+                <a href="/admin/tutoriel" class:active={$page.url.pathname.startsWith('/admin/tutoriel')}
+                    aria-current={$page.url.pathname.startsWith('/admin/tutoriel') ? "page" : undefined}
+                    on:click={() => (menuOpen = false)}
+                >📚 Tutoriel</a>
                 <a href="/" on:click|preventDefault={logout} class:active={false}>Déconnexion</a>
             {:else}
                 <a href="/admin/login" class:active={$page.url.pathname === '/admin/login'}
