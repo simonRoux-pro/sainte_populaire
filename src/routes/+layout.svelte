@@ -1,20 +1,21 @@
 <script lang="ts">
 	import '../app.css';
+	import { page } from '$app/state';
 	import Header from '$lib/components/Header.svelte';
+	import { SITE } from '$lib/site';
 
 	let { children } = $props();
 	const year = new Date().getFullYear();
 </script>
 
 <svelte:head>
-	<title>Sainte Populaire</title>
-	<meta
-		name="description"
-		content="Sainte Populaire, mouvement citoyen à Saint-Étienne pour la justice sociale, la solidarité et la démocratie locale."
-	/>
-	<meta property="og:site_name" content="Sainte Populaire" />
+	<title>{SITE.name}</title>
+	<meta name="description" content={SITE.description} />
+	<link rel="canonical" href={`${SITE.url}${page.url.pathname}`} />
+	<meta property="og:url" content={`${SITE.url}${page.url.pathname}`} />
+	<meta property="og:site_name" content={SITE.name} />
 	<meta property="og:type" content="website" />
-	<meta property="og:image" content="https://saintepopulaire.fr/images/logo_full.png" />
+	<meta property="og:image" content={`${SITE.url}/images/logo_full.png`} />
 	<meta property="og:locale" content="fr_FR" />
 </svelte:head>
 
@@ -29,12 +30,12 @@
 <footer>
 	<div class="footer-contact">
 		<h2>Nous contacter</h2>
-		<a href="mailto:contact@saintepopulaire.fr">contact@saintepopulaire.fr</a>
+		<a href={`mailto:${SITE.email}`}>{SITE.email}</a>
 	</div>
 	<div class="footer-social">
 		<a
 			class="instagram"
-			href="https://www.instagram.com/saintetiennepopulaire42/"
+			href={SITE.social.instagram}
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="Instagram"
@@ -55,7 +56,7 @@
 		</a>
 		<a
 			class="facebook"
-			href="https://www.facebook.com/p/Saint%C3%A9-Populaire-61563283078508/"
+			href={SITE.social.facebook}
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="Facebook"
@@ -74,7 +75,7 @@
 		</a>
 		<a
 			class="x"
-			href="https://x.com/saintepopulaire"
+			href={SITE.social.x}
 			target="_blank"
 			rel="noopener noreferrer"
 			aria-label="X (Twitter)"

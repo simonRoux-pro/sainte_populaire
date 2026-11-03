@@ -11,6 +11,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 	response.headers.set('X-Frame-Options', 'SAMEORIGIN');
 	response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
+	// Les adresses *.vercel.app (prévisualisations) ne doivent pas être indexées :
+	// seul le vrai domaine doit apparaître dans Google.
+	if (event.url.hostname.endsWith('.vercel.app')) {
+		response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+	}
+
 	if (event.url.pathname.startsWith('/admin') || event.url.pathname.startsWith('/api')) {
 		response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 		response.headers.set('Cache-Control', 'no-store');

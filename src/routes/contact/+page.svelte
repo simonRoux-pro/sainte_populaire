@@ -196,6 +196,9 @@
 
 	.contact-link {
 		display: inline-block;
+		box-sizing: border-box;
+		max-width: 100%;
+		overflow-wrap: anywhere;
 		background: var(--rouge-ouvrier, #c41e3a);
 		color: white;
 		padding: 0.6rem 1.2rem;

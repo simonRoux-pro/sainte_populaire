@@ -29,10 +29,24 @@
 	<h1 class="discover-title">Demandes d'ajout aux groupes</h1>
 
 	{#if !data.configured}
-		<p class="warning" role="alert">
-			Les demandes ne sont pas activées : il faut définir <code>SESSION_SECRET</code> et
-			<code>BLOB_READ_WRITE_TOKEN</code> dans les variables d'environnement Vercel.
-		</p>
+		<div class="warning" role="alert">
+			<p>
+				Les demandes ne sont pas encore activées. Il manque {data.missing.length > 1
+					? 'ces variables'
+					: 'cette variable'} dans Vercel :
+			</p>
+			<ul>
+				{#each data.missing as name (name)}<li><code>{name}</code></li>{/each}
+			</ul>
+			<p>
+				Projet sainte_pop → Settings → Environment Variables → ajouter, cocher Production et
+				Preview, puis Redeploy.
+				{#if data.missing.includes('SESSION_SECRET')}
+					Pour <code>SESSION_SECRET</code>, mettre une longue suite de lettres et chiffres au
+					hasard, et ne plus la changer ensuite.
+				{/if}
+			</p>
+		</div>
 	{:else}
 		<div class="tabs" role="tablist">
 			<button

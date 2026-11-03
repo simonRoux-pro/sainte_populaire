@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { formatDate } from '$lib/format';
+	import { SITE } from '$lib/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -136,15 +137,38 @@
 			{/each}
 		</div>
 	</section>
-	<aside class="framaform-aside">
-		<h2 class="discover-title">Soutenir Sainte Populaire</h2>
-		<iframe
-			src="https://framaforms.org/comite-de-soutien-de-sainte-populaire-municipales-2026-a-saint-etienne-1746463242"
-			width="100%"
-			height="1200"
-			loading="lazy"
-			title="Formulaire de soutien (Framaforms)"
-		></iframe>
+	<aside class="framaform-aside" aria-labelledby="agir-title">
+		<h2 id="agir-title" class="discover-title">Agir avec nous</h2>
+
+		{#if data.nextEvents.length > 0}
+			<h3 class="aside-subtitle">Prochains rendez-vous</h3>
+			<ul class="next-events">
+				{#each data.nextEvents as event (event.id)}
+					<li>
+						<time datetime={event.date}
+							>{formatDate(event.date, { day: 'numeric', month: 'short' })}</time
+						>
+						<span>
+							<strong>{event.title}</strong>
+							<small>{event.time.replace(':', 'h')} · {event.location}</small>
+						</span>
+					</li>
+				{/each}
+			</ul>
+			<a class="aside-link" href="/calendrier">Tout le calendrier →</a>
+		{/if}
+
+		<div class="aside-actions">
+			<a class="hero-cta" href="/rejoindre">Rejoindre le groupe WhatsApp / Signal</a>
+			<a
+				class="hero-cta secondary"
+				href={SITE.supportFormUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				Signer le comité de soutien ↗
+			</a>
+		</div>
 	</aside>
 </div>
 
@@ -178,6 +202,71 @@
 {/if}
 
 <style>
+	.aside-subtitle {
+		font-size: 1rem;
+		text-align: left;
+		margin: 0 0 0.8rem;
+	}
+	.next-events {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+	}
+	.next-events li {
+		display: flex;
+		gap: 0.8rem;
+		align-items: flex-start;
+	}
+	.next-events time {
+		flex-shrink: 0;
+		min-width: 3.6rem;
+		text-align: center;
+		background: var(--rouge-ouvrier);
+		color: #fff;
+		font-family: var(--font-title);
+		font-weight: bold;
+		border-radius: 0.5rem;
+		padding: 0.3rem 0.4rem;
+		font-size: 0.9rem;
+		line-height: 1.2;
+	}
+	.next-events span {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.35;
+	}
+	.next-events small {
+		color: var(--gris-acier);
+	}
+	.aside-link {
+		display: inline-block;
+		margin-top: 0.8rem;
+	}
+	.aside-actions {
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+		margin-top: 1.8rem;
+	}
+	.aside-actions .hero-cta {
+		margin: 0;
+		text-align: center;
+		border-radius: 2rem;
+		padding: 0.8rem 1.2rem;
+	}
+	.aside-actions .hero-cta.secondary {
+		background: transparent;
+		color: var(--rouge-ouvrier);
+		border: 2px solid var(--rouge-ouvrier);
+	}
+	.aside-actions .hero-cta.secondary:hover {
+		background: var(--rouge-ouvrier);
+		color: #fff;
+	}
 	.actualites-title {
 		font-size: 1.5rem;
 	}
@@ -188,12 +277,6 @@
 	.framaform-aside .discover-title {
 		font-size: 1.2em;
 		margin-bottom: 1.2rem;
-	}
-	.framaform-aside iframe {
-		border: none;
-		background: #fff;
-		border-radius: 1em;
-		box-shadow: 0 2px 16px rgba(30, 30, 30, 0.07);
 	}
 	.pdf-modal-title {
 		margin: 0 2.5rem 1rem 0;

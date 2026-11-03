@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import {
 	deleteJoinRequest,
-	joinRequestsEnabled,
+	missingJoinConfig,
 	listJoinRequests,
 	markJoinRequestDone
 } from '$lib/server/join-requests';
@@ -10,7 +10,8 @@ import { formatPhone } from '$lib/server/phone';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.admin) redirect(303, '/admin/login');
-	if (!joinRequestsEnabled()) return { configured: false, requests: [] };
+	const missing = missingJoinConfig();
+	if (missing.length > 0) return { configured: false, missing, requests: [] };
 
 	const requests = (await listJoinRequests()).map((r) => ({
 		...r,
@@ -20,7 +21,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 				? `https://wa.me/${r.phone.slice(1)}`
 				: `https://signal.me/#p/${encodeURIComponent(r.phone)}`
 	}));
-	return { configured: true, requests };
+	return { configured: true, missing: [] as string[], requests };
 };
 
 const withId = async (request: Request) => {

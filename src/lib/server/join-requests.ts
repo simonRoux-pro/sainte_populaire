@@ -31,7 +31,13 @@ const token = () => {
 	return value;
 };
 
-export const joinRequestsEnabled = () => Boolean(env.BLOB_READ_WRITE_TOKEN) && encryptionEnabled();
+/** Variables d'environnement manquantes pour activer les demandes. */
+export const missingJoinConfig = (): string[] => [
+	...(encryptionEnabled() ? [] : ['SESSION_SECRET']),
+	...(env.BLOB_READ_WRITE_TOKEN ? [] : ['BLOB_READ_WRITE_TOKEN'])
+];
+
+export const joinRequestsEnabled = () => missingJoinConfig().length === 0;
 
 // L'identifiant contient une partie aléatoire : l'adresse du fichier n'est pas devinable.
 const newId = () => `${Date.now()}-${randomBytes(12).toString('hex')}`;

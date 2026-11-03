@@ -12,6 +12,8 @@ cp .env.example .env   # puis remplir les valeurs
 npm run dev
 ```
 
+Les infos générales (domaine, email, réseaux sociaux, lien du comité de soutien) sont dans `src/lib/site.ts`.
+
 Sans `BLOB_READ_WRITE_TOKEN`, le site s'affiche mais les listes sont vides et l'ajout de contenu renvoie une erreur 503.
 
 ## Variables d'environnement
@@ -28,7 +30,7 @@ Sans `BLOB_READ_WRITE_TOKEN`, le site s'affiche mais les listes sont vides et l'
 1. Importer le dépôt GitHub dans Vercel (le framework SvelteKit est détecté).
 2. Onglet **Storage** : créer un store **Blob** et le relier au projet.
 3. **Settings > Environment Variables** : ajouter `ADMIN_PASSWORD` et `SESSION_SECRET`.
-4. **Settings > Domains** : ajouter `saintepopulaire.fr` et suivre les instructions DNS.
+4. **Settings > Domains** : brancher `saintepopulaire.fr`, voir le guide pas à pas [docs/NOM-DE-DOMAINE.md](docs/NOM-DE-DOMAINE.md).
 5. Chaque push sur `main` redéploie le site. Chaque branche a sa propre URL de prévisualisation.
 
 ## Demandes d'ajout WhatsApp / Signal

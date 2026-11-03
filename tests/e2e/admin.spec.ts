@@ -147,6 +147,11 @@ test('les événements passés sont repliés', async ({ page, baseURL }) => {
 		});
 		expect(res.status()).toBe(201);
 	}
+	await page.goto('/actualites');
+	const aside = page.getByRole('complementary', { name: 'Agir avec nous' });
+	await expect(aside.getByText('Réunion future')).toBeVisible();
+	await expect(aside.getByText('Réunion passée')).toHaveCount(0);
+
 	await page.goto('/calendrier');
 	await expect(page.getByText('Réunion future')).toBeVisible();
 	await expect(page.getByText('Réunion passée')).toBeHidden();

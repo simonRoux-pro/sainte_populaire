@@ -1,5 +1,7 @@
 <script lang="ts">
 	/** heading=true quand le bandeau porte le titre principal de la page. */
+	import { SITE } from '$lib/site';
+
 	let { heading = false }: { heading?: boolean } = $props();
 </script>
 
@@ -11,12 +13,7 @@
 		Sainte Populaire, c’est un collectif qui lutte pour une société juste, solidaire et ancrée dans
 		l’action populaire.
 	</p>
-	<a
-		class="hero-cta"
-		href="https://framaforms.org/comite-de-soutien-de-sainte-populaire-municipales-2026-a-saint-etienne-1746463242"
-		target="_blank"
-		rel="noopener noreferrer"
-	>
+	<a class="hero-cta" href={SITE.supportFormUrl} target="_blank" rel="noopener noreferrer">
 		Nous soutenir
 	</a>
 </section>

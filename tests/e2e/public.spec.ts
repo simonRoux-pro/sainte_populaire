@@ -84,3 +84,33 @@ test('les en-têtes de sécurité sont présents', async ({ request }) => {
 	const api = await request.get('/api/events');
 	expect(api.headers()['x-robots-tag']).toContain('noindex');
 });
+
+test('le sitemap liste les pages publiques sur le vrai domaine', async ({ request }) => {
+	const res = await request.get('/sitemap.xml');
+	expect(res.status()).toBe(200);
+	const xml = await res.text();
+	expect(xml).toContain('<loc>https://saintepopulaire.fr/actualites</loc>');
+	expect(xml).toContain('<loc>https://saintepopulaire.fr/rejoindre</loc>');
+	expect(xml).not.toContain('/admin');
+	const robots = await (await request.get('/robots.txt')).text();
+	expect(robots).toContain('Sitemap: https://saintepopulaire.fr/sitemap.xml');
+});
+
+test('les boutons de la page contact restent dans leur carte', async ({ page }) => {
+	await page.goto('/contact');
+	for (const card of await page.locator('.contact-card').all()) {
+		const box = (await card.boundingBox())!;
+		for (const link of await card.locator('a').all()) {
+			const l = (await link.boundingBox())!;
+			expect(l.x).toBeGreaterThanOrEqual(box.x - 1);
+			expect(l.x + l.width).toBeLessThanOrEqual(box.x + box.width + 1);
+		}
+	}
+});
+
+test("l'encadré « Agir avec nous » propose de rejoindre le groupe", async ({ page }) => {
+	await page.goto('/actualites');
+	const aside = page.getByRole('complementary', { name: 'Agir avec nous' });
+	await aside.getByRole('link', { name: /Rejoindre le groupe/ }).click();
+	await expect(page).toHaveURL(/\/rejoindre$/);
+});
