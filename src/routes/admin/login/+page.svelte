@@ -38,7 +38,16 @@
 	<form onsubmit={login} class="pdf-form">
 		<div class="form-group">
 			<label for="username">Identifiant</label>
-			<input id="username" type="text" autocomplete="username" bind:value={username} required />
+			<input
+				id="username"
+				type="text"
+				autocomplete="username"
+				autocapitalize="none"
+				autocorrect="off"
+				spellcheck="false"
+				bind:value={username}
+				required
+			/>
 		</div>
 		<div class="form-group">
 			<label for="password">Mot de passe</label>

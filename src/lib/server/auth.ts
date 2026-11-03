@@ -55,7 +55,8 @@ export const checkCredentials = (username: unknown, password: unknown): boolean 
 	const expectedPass = env.ADMIN_PASSWORD;
 	if (!expectedPass || typeof username !== 'string' || typeof password !== 'string') return false;
 	// Les deux comparaisons sont toujours faites pour ne pas révéler lequel est faux.
-	const userOk = safeEqual(username, expectedUser);
+	// L'identifiant ignore majuscules et espaces : les claviers de téléphone ajoutent souvent une majuscule.
+	const userOk = safeEqual(username.trim().toLowerCase(), expectedUser.trim().toLowerCase());
 	const passOk = safeEqual(password, expectedPass);
 	return userOk && passOk;
 };

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { blobKeys, blockExternal, PDF_FILE, resetBlob, sameOrigin } from './helpers';
+import { ADMIN, blobKeys, blockExternal, PDF_FILE, resetBlob, sameOrigin } from './helpers';
 
 const FORGED = [
 	{ name: 'admin', value: '1' },
@@ -67,4 +67,16 @@ test('un formulaire envoyé depuis un autre site est bloqué (CSRF)', async ({ r
 		multipart: { title: 'x' }
 	});
 	expect(res.status()).toBe(403);
+});
+
+test("l'identifiant accepte une majuscule ajoutée par le clavier du téléphone", async ({
+	page
+}) => {
+	await page.goto('/admin/login');
+	await expect(page.getByLabel('Identifiant')).toHaveAttribute('autocapitalize', 'none');
+	await page.getByLabel('Identifiant').fill(' Admin ');
+	await page.getByLabel('Mot de passe').fill(ADMIN.password);
+	await page.getByRole('button', { name: 'Connexion' }).click();
+	await page.waitForURL('**/actualites');
+	expect((await (await page.request.get('/api/login')).json()).admin).toBe(true);
 });
