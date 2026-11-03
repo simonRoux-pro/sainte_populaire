@@ -1,72 +1,48 @@
-# sv
-
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
 # Sainte Populaire
 
-Site web de Sainte Populaire - Site SvelteKit
+Site du mouvement Sainte Populaire (Saint-Étienne) : [saintepopulaire.fr](https://saintepopulaire.fr).
 
-## Configuration
+SvelteKit 2, Svelte 5, déployé sur Vercel. Les articles PDF et les événements sont stockés dans Vercel Blob.
 
-### Variables d'environnement
-
-1. Copie le fichier `.env.example` en `.env` :
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Ouvre le fichier `.env` et configure les variables :
-   - `ADMIN_USERNAME` : Nom d'utilisateur admin (optionnel, par défaut: 'admin')
-   - `ADMIN_PASSWORD` : **OBLIGATOIRE** - Mot de passe admin (choisis un mot de passe fort !)
-   - `BLOB_READ_WRITE_TOKEN` : Token Vercel Blob pour le stockage des fichiers
-
-3. **Important** : Ne commite JAMAIS le fichier `.env` dans Git ! Il est déjà dans `.gitignore`.
-
-### Développement local
+## Lancer en local
 
 ```bash
 npm install
+cp .env.example .env   # puis remplir les valeurs
 npm run dev
 ```
 
-Le site sera accessible sur `http://localhost:5173`
+Sans `BLOB_READ_WRITE_TOKEN`, le site s'affiche mais les listes sont vides et l'ajout de contenu renvoie une erreur 503.
 
-### Déploiement
+## Variables d'environnement
 
-Le site est déployé automatiquement sur Vercel lors d'un push sur la branche `main`.
+| Variable                | Rôle                                                                         |
+| ----------------------- | ---------------------------------------------------------------------------- |
+| `ADMIN_USERNAME`        | Identifiant de l'espace militant (`admin` par défaut)                        |
+| `ADMIN_PASSWORD`        | Mot de passe de l'espace militant (obligatoire)                              |
+| `SESSION_SECRET`        | Clé de signature des sessions. La changer déconnecte tout le monde           |
+| `BLOB_READ_WRITE_TOKEN` | Jeton Vercel Blob, ajouté automatiquement quand un store est relié au projet |
 
-N'oublie pas de configurer les variables d'environnement dans le dashboard Vercel !
+## Mise en ligne sur Vercel
+
+1. Importer le dépôt GitHub dans Vercel (le framework SvelteKit est détecté).
+2. Onglet **Storage** : créer un store **Blob** et le relier au projet.
+3. **Settings > Environment Variables** : ajouter `ADMIN_PASSWORD` et `SESSION_SECRET`.
+4. **Settings > Domains** : ajouter `saintepopulaire.fr` et suivre les instructions DNS.
+5. Chaque push sur `main` redéploie le site. Chaque branche a sa propre URL de prévisualisation.
+
+## Tests
+
+```bash
+npm run check      # types et Svelte
+npm run lint       # formatage et ESLint
+npm test           # tests unitaires (Vitest)
+npm run test:e2e   # tests navigateur (Playwright), desktop et mobile
+```
+
+Les tests e2e construisent le site et le lancent avec un faux serveur Vercel Blob (`tests/e2e/mock-blob-server.mjs`). Ils ne touchent jamais aux données réelles.
+
+## Limites connues
+
+- Les fichiers envoyés depuis l'espace militant sont limités à 4 Mo au total (limite des fonctions Vercel).
+- Les pages des pôles et la page programme sont encore des textes provisoires.
