@@ -14,7 +14,9 @@ const PAGES = [
 	{ path: '/sainte-pop', title: /Sainte Pop/ },
 	{ path: '/programme/grandes-thematiques', title: /Programme/ },
 	{ path: '/sainte-pop/poles/communication', title: /Pôle Communication/ },
-	{ path: '/mentions-legales', title: /Mentions légales/ }
+	{ path: '/mentions-legales', title: /Mentions légales/ },
+	{ path: '/rejoindre', title: /Nous rejoindre/ },
+	{ path: '/sainte-pop/poles/coordination', title: /Pôle Coordination/ }
 ];
 
 test.beforeAll(resetBlob);

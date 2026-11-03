@@ -25,7 +25,8 @@
 		},
 		{ href: '/programme/grandes-thematiques', label: 'Programme' },
 		{ href: '/calendrier', label: 'Calendrier' },
-		{ href: '/contact', label: 'Contact' }
+		{ href: '/contact', label: 'Contact' },
+		{ href: '/rejoindre', label: 'Nous rejoindre' }
 	];
 
 	let menuOpen = $state(false);
@@ -103,6 +104,7 @@
 			{/each}
 			{#if isAdmin}
 				<a href="/admin/ajouter-pdf" class:active={isActive('/admin/ajouter-pdf')}>Écrire</a>
+				<a href="/admin/demandes" class:active={isActive('/admin/demandes')}>Demandes</a>
 				<a href="/admin/tutoriel" class:active={isActive('/admin/tutoriel')}>Tutoriel</a>
 				<button type="button" class="nav-button" onclick={logout}>Déconnexion</button>
 			{/if}

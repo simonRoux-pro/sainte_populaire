@@ -52,6 +52,11 @@
 				<strong>Ajouter un événement</strong> : Va sur <code>/calendrier</code> et clique sur « Ajouter
 				un événement »
 			</li>
+			<li>
+				<strong>Traiter les demandes WhatsApp / Signal</strong> : Va sur
+				<code>/admin/demandes</code>, ouvre la conversation avec le bouton vert, ajoute la personne
+				au groupe, puis supprime la demande
+			</li>
 		</ol>
 
 		<div class="success-box">
@@ -189,7 +194,10 @@
 			</li>
 			<li>Une fois connecté, un cookie signé est créé pour 8 heures</li>
 			<li>Les pages et l'API admin vérifient la signature de ce cookie avant toute action</li>
-			<li>Changer <code>SESSION_SECRET</code> sur Vercel déconnecte tout le monde</li>
+			<li>
+				Changer <code>SESSION_SECRET</code> sur Vercel déconnecte tout le monde et rend illisibles les
+				demandes d'ajout en attente : à éviter
+			</li>
 		</ul>
 	</div>
 

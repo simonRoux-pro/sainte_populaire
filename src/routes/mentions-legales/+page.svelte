@@ -33,6 +33,11 @@
 		>. Vous pouvez aussi saisir la CNIL (cnil.fr).
 	</p>
 	<p>
+		Les demandes d'ajout aux groupes WhatsApp ou Signal (prénom, numéro de téléphone, messagerie
+		choisie) sont enregistrées chiffrées et servent uniquement à vous ajouter au groupe. Elles sont
+		supprimées une fois traitées.
+	</p>
+	<p>
 		Les vidéos intégrées sont fournies par YouTube, qui peut déposer ses propres cookies lors de la
 		lecture.
 	</p>

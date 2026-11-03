@@ -36,7 +36,8 @@ export default defineConfig({
 				SESSION_SECRET: 'secret-e2e',
 				BLOB_READ_WRITE_TOKEN: 'vercel_blob_rw_test_token',
 				VERCEL_BLOB_API_URL: BLOB_URL,
-				VERCEL_BLOB_RETRIES: '0'
+				VERCEL_BLOB_RETRIES: '0',
+				JOIN_RATE_LIMIT: '1000'
 			}
 		}
 	]

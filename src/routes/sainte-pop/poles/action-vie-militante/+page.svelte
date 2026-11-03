@@ -1,8 +1,12 @@
 <svelte:head>
-	<title>Pôle Action Vie Militante | Sainte Populaire</title>
+	<title>Pôle Action vie militante | Sainte Populaire</title>
 </svelte:head>
 
-<section class="action-vie-militante">
-	<h1>Pôle Action Vie Militante</h1>
-	<p>Présentation du pôle Action Vie Militante...</p>
-</section>
+<article class="pole">
+	<p class="pole-kicker">Les pôles de Sainte Populaire</p>
+	<h1>Pôle Action vie militante</h1>
+	<p class="pole-lead">La présentation de ce pôle arrive bientôt.</p>
+	<div class="pole-actions">
+		<a class="hero-cta" href="/rejoindre">Nous rejoindre</a>
+	</div>
+</article>

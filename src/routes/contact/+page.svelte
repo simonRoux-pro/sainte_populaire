@@ -29,7 +29,7 @@
 						<polyline points="22,6 12,13 2,6" />
 					</svg>
 				</div>
-				<h3>Email</h3>
+				<h2>Email</h2>
 				<p>Pour toute question</p>
 				<a href="mailto:contact@saintepopulaire.fr" class="contact-link">
 					contact@saintepopulaire.fr
@@ -47,11 +47,32 @@
 						stroke-width="2"
 						stroke-linecap="round"
 						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+					</svg>
+				</div>
+				<h2>WhatsApp ou Signal</h2>
+				<p>Rejoindre le groupe de discussion</p>
+				<a href="/rejoindre" class="contact-link">Demander à être ajouté·e</a>
+			</div>
+
+			<div class="contact-card">
+				<div class="contact-icon">
+					<svg
+						width="32"
+						height="32"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
 					>
 						<path d="M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v9h4v-9h3l1-4h-4V6a1 1 0 0 1 1-1h3z" />
 					</svg>
 				</div>
-				<h3>Réseaux sociaux</h3>
+				<h2>Réseaux sociaux</h2>
 				<p>Suivez notre actualité</p>
 				<div class="social-links">
 					<a
@@ -158,7 +179,8 @@
 		margin-bottom: 1rem;
 	}
 
-	.contact-card h3 {
+	.contact-card h2 {
+		text-transform: none;
 		font-family: 'Roboto Condensed', Arial, sans-serif;
 		font-weight: bold;
 		color: var(--rouge-ouvrier, #c41e3a);
@@ -216,7 +238,7 @@
 		.contact-card {
 			padding: 1.5rem 1rem;
 		}
-		.contact-card h3 {
+		.contact-card h2 {
 			font-size: 1.1rem;
 		}
 		.contact-link {

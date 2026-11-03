@@ -31,6 +31,12 @@ Sans `BLOB_READ_WRITE_TOKEN`, le site s'affiche mais les listes sont vides et l'
 4. **Settings > Domains** : ajouter `saintepopulaire.fr` et suivre les instructions DNS.
 5. Chaque push sur `main` redéploie le site. Chaque branche a sa propre URL de prévisualisation.
 
+## Demandes d'ajout WhatsApp / Signal
+
+Le formulaire public `/rejoindre` enregistre les demandes dans Vercel Blob, chiffrées (AES-256-GCM, clé dérivée de `SESSION_SECRET`).
+Les admins les traitent sur `/admin/demandes` : lien direct vers WhatsApp ou Signal, « Marquer comme ajouté », « Supprimer ».
+Protection anti-spam : champ caché pour les robots et 5 demandes maximum par adresse IP toutes les 10 minutes.
+
 ## Tests
 
 ```bash
@@ -45,4 +51,4 @@ Les tests e2e construisent le site et le lancent avec un faux serveur Vercel Blo
 ## Limites connues
 
 - Les fichiers envoyés depuis l'espace militant sont limités à 4 Mo au total (limite des fonctions Vercel).
-- Les pages des pôles et la page programme sont encore des textes provisoires.
+- Les pages des pôles Relation, Garanties et Action vie militante ainsi que la page programme sont encore provisoires.
