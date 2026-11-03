@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	const article = await getArticleBySlug(params.slug);
 
 	if (!article || article.type !== 'markdown' || !article.body) {
-		throw error(404, 'Article introuvable');
+		error(404, 'Article introuvable');
 	}
 
 	return {
@@ -16,4 +16,3 @@ export const load: PageServerLoad = async ({ params }) => {
 		content: article.body
 	};
 };
-
