@@ -15,7 +15,6 @@
 					label: 'Les pôles',
 					submenu: [
 						{ href: '/sainte-pop/poles/communication', label: 'Pôle Communication' },
-						{ href: '/sainte-pop/poles/relation', label: 'Pôle Relation' },
 						{ href: '/sainte-pop/poles/garanties', label: 'Pôle Garanties' },
 						{ href: '/sainte-pop/poles/coordination', label: 'Pôle Coordination' },
 						{ href: '/sainte-pop/poles/action-vie-militante', label: 'Pôle Action vie militante' }

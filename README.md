@@ -51,4 +51,4 @@ Les tests e2e construisent le site et le lancent avec un faux serveur Vercel Blo
 ## Limites connues
 
 - Les fichiers envoyés depuis l'espace militant sont limités à 4 Mo au total (limite des fonctions Vercel).
-- Les pages des pôles Relation, Garanties et Action vie militante ainsi que la page programme sont encore provisoires.
+- Les pages des pôles Garanties et Action vie militante ainsi que la page programme sont encore provisoires.
