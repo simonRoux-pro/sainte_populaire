@@ -3,6 +3,7 @@
 	import { formatDate } from '$lib/format';
 	import Hero from '$lib/components/Hero.svelte';
 	import PdfViewer from '$lib/components/PdfViewer.svelte';
+	import { SITE } from '$lib/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -52,96 +53,105 @@
 		<h1 class="actualites-title">Actualités</h1>
 		{#if data.articles.length === 0}
 			<p class="empty">Aucune actualité pour le moment. Revenez bientôt !</p>
-		{/if}
-		<div class="articles-grid">
-			{#each data.articles as article (article.id)}
-				<article class="article-card">
-					<div class="article-card-header">
-						<time class="date" datetime={article.date}>{formatDate(article.date)}</time>
-						{#if article.type === 'pdf'}
-							<span class="pdf-badge">PDF</span>
-						{/if}
-					</div>
-					<h2 class="article-title">{article.title}</h2>
-					{#if article.image}
-						{#if article.link}
-							<a
-								href={article.link}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="article-image-link"
-							>
+		{:else}
+			<div class="articles-grid">
+				{#each data.articles as article (article.id)}
+					<article class="article-card">
+						<div class="article-card-header">
+							<time class="date" datetime={article.date}>{formatDate(article.date)}</time>
+							{#if article.type === 'pdf'}
+								<span class="pdf-badge">PDF</span>
+							{/if}
+						</div>
+						<h2 class="article-title">{article.title}</h2>
+						{#if article.image}
+							{#if article.link}
+								<a
+									href={article.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="article-image-link"
+								>
+									<img class="article-image" src={article.image} alt="" loading="lazy" />
+								</a>
+							{:else}
 								<img class="article-image" src={article.image} alt="" loading="lazy" />
-							</a>
-						{:else}
-							<img class="article-image" src={article.image} alt="" loading="lazy" />
+							{/if}
 						{/if}
-					{/if}
-					<p class="summary">{article.summary}</p>
-					<div class="article-actions">
-						{#if article.type === 'markdown' && article.slug}
-							<a class="hero-cta" href={`/actualites/${article.slug}`}>Lire</a>
-						{:else if article.type === 'pdf' && article.file}
-							{@const file = `/pdf/${article.id}`}
-							<button
-								class="hero-cta"
-								type="button"
-								onclick={() => openPreview(file, article.title)}
-							>
-								Lire
-							</button>
-							<a
-								href={file}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="pdf-ext-link"
-								aria-label={`Ouvrir « ${article.title} » dans un nouvel onglet`}>↗</a
-							>
-						{/if}
-						{#if article.link && !article.image}
-							<a href={article.link} target="_blank" rel="noopener noreferrer" class="pdf-ext-link"
-								>En savoir plus</a
-							>
-						{/if}
-						{#if data.admin}
-							<button
-								class="delete-btn"
-								type="button"
-								aria-label={`Supprimer l'article « ${article.title} »`}
-								onclick={() => deleteArticle(article)}
-							>
-								<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-									<path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-									<path
-										d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-									<path
-										d="M10 11v6M14 11v6"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-									/>
-									<path
-										d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-									/>
-								</svg>
-							</button>
-						{/if}
-					</div>
-				</article>
-			{/each}
-		</div>
+						<p class="summary">{article.summary}</p>
+						<div class="article-actions">
+							{#if article.type === 'markdown' && article.slug}
+								<a class="hero-cta" href={`/actualites/${article.slug}`}>Lire</a>
+							{:else if article.type === 'pdf' && article.file}
+								{@const file = `/pdf/${article.id}`}
+								<button
+									class="hero-cta"
+									type="button"
+									onclick={() => openPreview(file, article.title)}
+								>
+									Lire
+								</button>
+								<a
+									href={file}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="pdf-ext-link"
+									aria-label={`Ouvrir « ${article.title} » dans un nouvel onglet`}>↗</a
+								>
+							{/if}
+							{#if article.link && !article.image}
+								<a
+									href={article.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="pdf-ext-link">En savoir plus</a
+								>
+							{/if}
+							{#if data.admin}
+								<button
+									class="delete-btn"
+									type="button"
+									aria-label={`Supprimer l'article « ${article.title} »`}
+									onclick={() => deleteArticle(article)}
+								>
+									<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path
+											d="M3 6h18"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+										/>
+										<path
+											d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+										<path
+											d="M10 11v6M14 11v6"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+										/>
+										<path
+											d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								</button>
+							{/if}
+						</div>
+					</article>
+				{/each}
+			</div>
+		{/if}
 	</section>
 	<aside class="framaform-aside" aria-labelledby="agir-title">
-		<h2 id="agir-title" class="discover-title">Agir avec nous</h2>
+		<h2 id="agir-title" class="aside-title">Agir avec nous</h2>
 
 		{#if data.nextEvents.length > 0}
 			<h3 class="aside-subtitle">Prochains rendez-vous</h3>
@@ -159,10 +169,21 @@
 				{/each}
 			</ul>
 			<a class="aside-link" href="/calendrier">Tout le calendrier →</a>
+		{:else}
+			<p class="aside-text">
+				Réunions de quartier, actions, assemblées : rejoins le groupe de discussion pour être
+				prévenu·e des prochains rendez-vous.
+			</p>
 		{/if}
 
-		<div class="aside-actions">
-			<a class="hero-cta" href="/rejoindre">Rejoindre le groupe WhatsApp / Signal</a>
+		<a class="aside-cta" href="/rejoindre">Rejoindre le groupe</a>
+		<p class="aside-apps">Sur WhatsApp ou Signal, au choix</p>
+
+		<div class="aside-social">
+			<span>Nous suivre</span>
+			<a href={SITE.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+			<a href={SITE.social.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
+			<a href={SITE.social.x} target="_blank" rel="noopener noreferrer">X</a>
 		</div>
 	</aside>
 </div>
@@ -203,10 +224,24 @@
 	.actus-frama-flex > .actualites-section {
 		margin-top: 1rem;
 	}
+	.aside-title {
+		border-left: 4px solid var(--rouge-ouvrier);
+		padding-left: 0.7rem;
+		color: #fff;
+		font-size: 1.35rem;
+		margin: 0 0 1rem;
+		text-align: left;
+	}
 	.aside-subtitle {
-		font-size: 1rem;
+		color: #ffb3bb;
+		font-size: 0.9rem;
 		text-align: left;
 		margin: 0 0 0.8rem;
+	}
+	.aside-text {
+		text-align: left;
+		margin: 0 0 1.2rem;
+		line-height: 1.6;
 	}
 	.next-events {
 		list-style: none;
@@ -240,24 +275,68 @@
 		flex-direction: column;
 		line-height: 1.35;
 	}
+	.next-events strong {
+		color: #fff;
+	}
 	.next-events small {
-		color: var(--gris-acier);
+		color: #b9b0b2;
 	}
 	.aside-link {
 		display: inline-block;
-		margin-top: 0.8rem;
+		margin: 0.9rem 0 1.2rem;
+		color: #ffb3bb;
 	}
-	.aside-actions {
-		display: flex;
-		flex-direction: column;
-		gap: 0.8rem;
-		margin-top: 1.8rem;
-	}
-	.aside-actions .hero-cta {
-		margin: 0;
+	.aside-cta {
+		display: block;
 		text-align: center;
+		background: var(--rouge-ouvrier);
+		color: #fff;
+		font-family: var(--font-title);
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		padding: 0.9rem 1rem;
 		border-radius: 2rem;
-		padding: 0.8rem 1.2rem;
+		text-decoration: none;
+	}
+	.aside-cta:hover,
+	.aside-cta:focus-visible {
+		background: #fff;
+		color: var(--rouge-ouvrier);
+		text-decoration: none;
+	}
+	.aside-apps {
+		text-align: center;
+		color: #b9b0b2;
+		font-size: 0.85rem;
+		margin: 0.5rem 0 0;
+	}
+	@media (max-width: 1100px) {
+		.actus-frama-flex {
+			gap: 0;
+		}
+		.actus-frama-flex > .actualites-section {
+			margin-bottom: 0;
+		}
+		.empty {
+			margin-bottom: 0;
+		}
+	}
+	.aside-social {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 1rem;
+		justify-content: center;
+		margin-top: 1.2rem;
+		font-size: 0.9rem;
+	}
+	.aside-social span {
+		color: #b9b0b2;
+		width: 100%;
+		text-align: center;
+	}
+	.aside-social a {
+		color: #fff;
 	}
 	.actualites-title {
 		font-size: 1.5rem;
@@ -265,10 +344,6 @@
 	.empty {
 		color: var(--gris-acier);
 		margin-top: 2rem;
-	}
-	.framaform-aside .discover-title {
-		font-size: 1.2em;
-		margin-bottom: 1.2rem;
 	}
 	.pdf-modal-title {
 		margin: 0 2.5rem 1rem 0;
