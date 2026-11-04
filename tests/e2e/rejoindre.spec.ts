@@ -60,8 +60,10 @@ test('une demande est enregistrée chiffrée puis traitée par un admin', async 
 	expect(raw).not.toContain('Léa');
 
 	await login(page);
-	await openMenuIfMobile(page);
-	await page.getByRole('link', { name: 'Demandes' }).click();
+	await page
+		.getByRole('navigation', { name: 'Espace militant' })
+		.getByRole('link', { name: 'Demandes' })
+		.click();
 	const item = page.getByRole('listitem').filter({ hasText: 'Léa Martin' });
 	await expect(item).toContainText('+33 6 12 34 56 78');
 	await expect(item).toContainText('Tarentaize');

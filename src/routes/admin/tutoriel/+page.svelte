@@ -291,6 +291,7 @@
 
 <style>
 	.tutoriel-container {
+		text-align: left;
 		max-width: 900px;
 		margin: 2rem auto;
 		padding: 0 1.5rem;
@@ -354,6 +355,11 @@
 		margin-bottom: 0.5rem;
 	}
 
+	.code-block,
+	.file-tree {
+		white-space: pre;
+		text-align: left;
+	}
 	.code-block {
 		background: #f5f5f5;
 		border-left: 4px solid var(--vert);
@@ -443,5 +449,19 @@
 
 	.link-button:hover {
 		background: var(--vert-hover);
+	}
+	@media (max-width: 600px) {
+		.tutoriel-container {
+			padding: 0;
+		}
+		.tutoriel-header h1 {
+			font-size: 1.7rem;
+		}
+		.section {
+			padding: 1.2rem 1rem;
+		}
+		.section h2 {
+			font-size: 1.3rem;
+		}
 	}
 </style>

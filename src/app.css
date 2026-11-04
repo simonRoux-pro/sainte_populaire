@@ -36,6 +36,8 @@ body {
 
 main {
 	flex: 1 0 auto;
+	/* Sans ça, un long bloc de code élargit toute la page au lieu de défiler. */
+	min-width: 0;
 }
 
 body {
@@ -53,6 +55,8 @@ h3,
 h4,
 h5,
 h6 {
+	overflow-wrap: break-word;
+	hyphens: auto;
 	font-family: var(--font-title);
 	font-weight: 700;
 	margin-top: 0;
@@ -890,6 +894,13 @@ nav .dropdown-content a[aria-current='page'] {
 /* Menu sur écrans intermédiaires : libellés sur une ligne */
 nav a {
 	white-space: nowrap;
+}
+@media (min-width: 901px) {
+	nav {
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		min-width: 0;
+	}
 }
 @media (min-width: 901px) and (max-width: 1180px) {
 	.header-content {

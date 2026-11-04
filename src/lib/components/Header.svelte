@@ -101,12 +101,68 @@
 					</a>
 				{/if}
 			{/each}
-			{#if isAdmin}
+		</nav>
+	</div>
+	{#if isAdmin}
+		<div class="admin-bar">
+			<div class="admin-links" role="navigation" aria-label="Espace militant">
+				<span class="admin-label">Espace militant</span>
 				<a href="/admin/ajouter-pdf" class:active={isActive('/admin/ajouter-pdf')}>Écrire</a>
 				<a href="/admin/demandes" class:active={isActive('/admin/demandes')}>Demandes</a>
 				<a href="/admin/tutoriel" class:active={isActive('/admin/tutoriel')}>Tutoriel</a>
-				<button type="button" class="nav-button" onclick={logout}>Déconnexion</button>
-			{/if}
-		</nav>
-	</div>
+				<button type="button" onclick={logout}>Déconnexion</button>
+			</div>
+		</div>
+	{/if}
 </header>
+
+<style>
+	.admin-bar {
+		background: #3a2f31;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+	}
+	.admin-links {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.3rem 0.8rem;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0.35rem 1.5rem;
+	}
+	.admin-label {
+		color: #ffb3bb;
+		font-family: var(--font-title);
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-right: 0.4rem;
+	}
+	.admin-links a,
+	.admin-links button {
+		display: inline-block;
+		padding: 0.2rem 0.6rem;
+		font-size: 0.85rem;
+		font-family: var(--font-title);
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		color: #f1e4e6;
+		background: none;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		white-space: nowrap;
+	}
+	.admin-links a.active,
+	.admin-links a:hover,
+	.admin-links button:hover {
+		background: var(--rouge-ouvrier);
+		color: #fff;
+	}
+	@media (max-width: 900px) {
+		.admin-links {
+			padding: 0.35rem 1rem;
+		}
+	}
+</style>

@@ -3,7 +3,6 @@ import {
 	blobKeys,
 	blockExternal,
 	login,
-	openMenuIfMobile,
 	PDF_FILE,
 	PNG_FILE,
 	resetBlob,
@@ -19,8 +18,10 @@ test.beforeEach(async ({ page }) => {
 test('publier puis supprimer un article PDF', async ({ page }) => {
 	const errors = trackErrors(page);
 	await login(page);
-	await openMenuIfMobile(page);
-	await page.getByRole('link', { name: 'Écrire' }).click();
+	await page
+		.getByRole('navigation', { name: 'Espace militant' })
+		.getByRole('link', { name: 'Écrire' })
+		.click();
 	await expect(page).toHaveURL(/\/admin\/ajouter-pdf$/);
 
 	await page.getByLabel('Titre *').fill('Lettre ouverte à la mairie');
@@ -181,16 +182,39 @@ test('les événements passés sont repliés', async ({ page, baseURL }) => {
 
 test('la déconnexion retire les droits', async ({ page }) => {
 	await login(page);
-	await openMenuIfMobile(page);
 	const loggedOut = page.waitForResponse(
 		(r) => r.url().endsWith('/api/login') && r.request().method() === 'DELETE'
 	);
 	await page.getByRole('button', { name: 'Déconnexion' }).click();
 	await loggedOut;
 	await page.waitForLoadState('load');
-	await openMenuIfMobile(page);
-	await expect(page.getByRole('link', { name: 'Écrire' })).toHaveCount(0);
+	await expect(page.getByRole('navigation', { name: 'Espace militant' })).toHaveCount(0);
 	expect((await (await page.request.get('/api/login')).json()).admin).toBe(false);
 	await page.goto('/admin/tutoriel');
 	await expect(page).toHaveURL(/\/admin\/login$/);
+});
+
+test('rien ne dépasse quand un admin est connecté, quelle que soit la largeur', async ({
+	page,
+	isMobile
+}) => {
+	test.skip(isMobile, 'les largeurs sont testées une par une ci-dessous');
+	await login(page);
+	for (const width of [360, 600, 900, 980, 1024, 1280, 1440]) {
+		await page.setViewportSize({ width, height: 800 });
+		for (const path of [
+			'/actualites',
+			'/admin/demandes',
+			'/admin/tutoriel',
+			'/admin/ajouter-pdf'
+		]) {
+			await page.goto(path);
+			const overflow = await page.evaluate(
+				() => document.documentElement.scrollWidth - document.documentElement.clientWidth
+			);
+			expect(overflow, `${path} à ${width}px`).toBeLessThanOrEqual(1);
+			const bar = page.getByRole('navigation', { name: 'Espace militant' });
+			await expect(bar.getByRole('button', { name: 'Déconnexion' })).toBeInViewport();
+		}
+	}
 });
