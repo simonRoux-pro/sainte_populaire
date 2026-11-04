@@ -1,64 +1,61 @@
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { isAdmin } from '$lib/server/auth';
 import {
-	StorageNotConfiguredError,
+	EVENT_TYPES,
+	deleteAssets,
 	deleteEventById,
 	getEvents,
 	saveEvent,
 	uploadAsset
 } from '$lib/server/db';
+import { errorResponse, unauthorized } from '$lib/server/http';
 import { sanitizeFilename } from '$lib/server/strings';
-
-const allowedImageTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'];
+import {
+	IMAGE_TYPES,
+	clockTime,
+	durationHours,
+	isoDate,
+	oneOf,
+	optionalFile,
+	optionalUrl,
+	text
+} from '$lib/server/validation';
 
 export const GET: RequestHandler = async () => {
 	try {
-		const events = await getEvents();
-		return json(events);
+		return json(await getEvents());
 	} catch (error) {
-		console.error('Erreur chargement événements', error);
-		return json({ error: 'Erreur lors du chargement des événements' }, { status: 500 });
+		return errorResponse(error, 'Erreur lors du chargement des événements');
 	}
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-	if (!isAdmin(cookies)) {
-		return json({ error: 'Non autorisé' }, { status: 401 });
-	}
+	if (!isAdmin(cookies)) return unauthorized();
 
+	const uploaded: string[] = [];
 	try {
-		const formData = await request.formData();
-		const title = formData.get('title') as string;
-		const date = formData.get('date') as string;
-		const time = formData.get('time') as string;
-		const duration = formData.get('duration') as string;
-		const location = formData.get('location') as string;
-		const description = formData.get('description') as string;
-		const type = formData.get('type') as string;
-		const link = (formData.get('link') as string) || '';
-		const imageFile = formData.get('image');
-
-		if (!title || !date || !time || !duration || !location || !description || !type) {
-			return json({ error: 'Champs obligatoires manquants' }, { status: 400 });
-		}
-
-		let imageUrl: string | undefined;
-		let imageStoragePath: string | undefined;
-
-		if (imageFile && imageFile instanceof File) {
-			if (!allowedImageTypes.includes(imageFile.type)) {
-				return json({ error: "Format d'image non supporté" }, { status: 400 });
-			}
-			const arrayBuffer = await imageFile.arrayBuffer();
-			const imageKey = `events/${Date.now()}-${sanitizeFilename(imageFile.name)}`;
-			const imgAsset = await uploadAsset(imageKey, arrayBuffer, imageFile.type || 'image/png');
-			imageUrl = imgAsset.url;
-			imageStoragePath = imgAsset.pathname;
-		}
+		const form = await request.formData();
+		const title = text(form, 'title', 'Titre', 200);
+		const date = isoDate(form, 'date', 'Date');
+		const time = clockTime(form, 'time', 'Heure');
+		const duration = durationHours(form, 'duration', 'Durée');
+		const location = text(form, 'location', 'Lieu', 300);
+		const description = text(form, 'description', 'Description', 3000);
+		const type = oneOf(form, 'type', 'Type', EVENT_TYPES);
+		const link = optionalUrl(form, 'link');
+		const image = await optionalFile(form, 'image', 'Image', Object.keys(IMAGE_TYPES));
 
 		const id = Date.now();
-		const now = new Date().toISOString();
+		let imageAsset: { url: string; pathname: string } | undefined;
+		if (image) {
+			imageAsset = await uploadAsset(
+				`events/${id}/${sanitizeFilename(image.name, `image.${IMAGE_TYPES[image.type]}`)}`,
+				image.buffer,
+				image.type
+			);
+			uploaded.push(imageAsset.pathname);
+		}
 
 		const event = await saveEvent({
 			id,
@@ -69,44 +66,32 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			location,
 			description,
 			type,
-			link: link || undefined,
-			image: imageUrl,
-			createdAt: now,
-			storage: {
-				image: imageStoragePath
-			}
+			link,
+			image: imageAsset?.url,
+			createdAt: new Date().toISOString(),
+			storage: { image: imageAsset?.pathname }
 		});
 
 		return json({ success: true, event }, { status: 201 });
 	} catch (error) {
-		if (error instanceof StorageNotConfiguredError) {
-			return json({ error: error.message }, { status: 503 });
-		}
-		console.error('Erreur création événement', error);
-		return json({ error: "Erreur lors de la création de l'événement" }, { status: 500 });
+		await deleteAssets(uploaded);
+		return errorResponse(error, "Erreur lors de la création de l'événement");
 	}
 };
 
 export const DELETE: RequestHandler = async ({ request, cookies }) => {
-	if (!isAdmin(cookies)) {
-		return json({ error: 'Non autorisé' }, { status: 401 });
-	}
+	if (!isAdmin(cookies)) return unauthorized();
 
 	try {
 		const { id } = await request.json();
-
-		if (!id) {
+		const numericId = Number(id);
+		if (!Number.isFinite(numericId)) {
 			return json({ error: "ID d'événement manquant" }, { status: 400 });
 		}
-
-		await deleteEventById(Number(id));
+		const deleted = await deleteEventById(numericId);
+		if (!deleted) return json({ error: 'Événement introuvable' }, { status: 404 });
 		return json({ success: true });
 	} catch (error) {
-		if (error instanceof StorageNotConfiguredError) {
-			return json({ error: error.message }, { status: 503 });
-		}
-		console.error('Erreur suppression événement', error);
-		return json({ error: "Erreur lors de la suppression de l'événement" }, { status: 500 });
+		return errorResponse(error, "Erreur lors de la suppression de l'événement");
 	}
 };
-

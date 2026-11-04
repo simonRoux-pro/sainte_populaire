@@ -1,8 +1,6 @@
 import { redirect } from '@sveltejs/kit';
-import { isAdmin } from '$lib/server/auth.js';
+import type { PageServerLoad } from './$types';
 
-export function load({ cookies }) {
-    if (!isAdmin(cookies)) {
-        throw redirect(302, '/admin/login');
-    }
-}
+export const load: PageServerLoad = ({ locals }) => {
+	if (!locals.admin) redirect(303, '/admin/login');
+};

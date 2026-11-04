@@ -1,145 +1,168 @@
-<script>
-    import { page } from '$app/stores';
-    import { onMount } from 'svelte';
+<script lang="ts">
+	import { page } from '$app/state';
+	import { afterNavigate } from '$app/navigation';
 
-    let menuOpen = false;
-    let isAdmin = false;
+	type NavLink = { label: string; href?: string; submenu?: NavLink[] };
 
-    function toggleMenu() {
-        menuOpen = !menuOpen;
-    }
+	const links: NavLink[] = [
+		{ href: '/actualites', label: 'Actualités' },
+		{
+			label: 'Sainte Pop',
+			href: '/sainte-pop',
+			submenu: [
+				{ href: '/sainte-pop', label: "C'est quoi ?" },
+				{
+					label: 'Les pôles',
+					submenu: [
+						{ href: '/sainte-pop/poles/communication', label: 'Pôle Communication' },
+						{ href: '/sainte-pop/poles/garanties', label: 'Pôle Garanties' },
+						{ href: '/sainte-pop/poles/coordination', label: 'Pôle Coordination' },
+						{ href: '/sainte-pop/poles/action-vie-militante', label: 'Pôle Action vie militante' }
+					]
+				}
+			]
+		},
+		{ href: '/programme/grandes-thematiques', label: 'Programme' },
+		{ href: '/calendrier', label: 'Calendrier' },
+		{ href: '/contact', label: 'Contact' },
+		{ href: '/rejoindre', label: 'Nous rejoindre' }
+	];
 
-    onMount(() => {
-        // Vérification du statut admin
-        fetch('/api/login', { method: 'GET' })
-            .then(res => {
-                isAdmin = res.ok;
-            })
-            .catch(err => {
-                console.error('Erreur de vérification admin:', err);
-            });
+	let menuOpen = $state(false);
+	const isAdmin = $derived(Boolean(page.data.admin));
+	const path = $derived(page.url.pathname);
 
-        // Gestion du redimensionnement
-        const handler = () => {
-            if (window.innerWidth > 800) menuOpen = false;
-        };
-        window.addEventListener('resize', handler);
+	const isActive = (href?: string) =>
+		Boolean(href) && (path === href || path.startsWith(`${href}/`));
 
-        // Fonction de nettoyage
-        return () => {
-            window.removeEventListener('resize', handler);
-        };
-    });
+	afterNavigate(() => (menuOpen = false));
 
-    // Définition des types pour les liens de navigation
-    /**
-     * @typedef {Object} NavLink
-     * @property {string} label
-     * @property {string} [href]
-     * @property {NavLink[]} [submenu]
-     */
-    /** @type {NavLink[]} */
-    const links = [
-        { href: '/actualites', label: 'Actualités' },
-        {
-            label: 'Sainte Pop',
-            href: '/sainte-pop',
-            submenu: [
-                { href: '/sainte-pop', label: "C'est quoi ?" },
-                { href: '/sainte-pop/organisation', label: "Organisation du mouvement" },
-                {
-                    label: 'LES PÔLES',
-                    // href: '/sainte-pop/poles',
-                    submenu: [
-                        { href: '/sainte-pop/poles/communication', label: 'Pôle Communication' },
-                        { href: '/sainte-pop/poles/relation', label: 'Pôle Relation' },
-                        { href: '/sainte-pop/poles/garanties', label: 'Pôle Garanties' },
-                        { href: '/sainte-pop/poles/coordination', label: 'Pôle Coordination' },
-                        { href: '/sainte-pop/poles/action-vie-militante', label: 'Pôle Action vie militante' }
-                    ]
-                }
-            ]
-        },
-        {
-            label: 'Programme',
-            href: '/programme',
-            submenu: [
-                { href: '/programme/grandes-thematiques', label: 'Grandes thématiques' },
-                { href: '/programme/quizz', label: 'Quizz' }
-            ]
-        },
-        { href: '/calendrier', label: 'Calendrier' },
-        { href: '/contact', label: 'Contact' }
-    ];
-
-    function logout() {
-        fetch('/api/login', { method: 'DELETE' })
-            .then(() => window.location.href = '/');
-    }
+	async function logout() {
+		await fetch('/api/login', { method: 'DELETE' });
+		window.location.href = '/';
+	}
 </script>
 
+<svelte:window onkeydown={(e) => e.key === 'Escape' && (menuOpen = false)} />
+
 <header>
-    <div class="header-content">
-        <div class="logo">
-            <a href="/"><img src="/images/logo_full.png" alt="Logo Sainte Populaire" /></a>
-        </div>
-        <button class="menu-burger" on:click={toggleMenu} aria-label="Menu">&#9776;</button>
-        <nav class:open={menuOpen}>
-            {#each links as link}
-                {#if link.submenu}
-                    <div class="dropdown">
-                        <a
-                            href={link.href ?? '#'}
-                            class:active={link.href && $page.url.pathname.startsWith(link.href)}
-                        >
-                            {link.label}
-                        </a>
-                        <div class="dropdown-content">
-                            {#each link.submenu as sub}
-                                {#if sub.submenu}
-                                    <div class="dropdown-sub">
-                                        {#if sub.href}
-                                            <a href={sub.href}>{sub.label}</a>
-                                        {:else}
-                                            <span class="dropdown-title">{sub.label}</span>
-                                        {/if}
-                                        <div class="dropdown-content-sub">
-                                            {#each sub.submenu as subsub}
-                                                <a href={subsub.href}>{subsub.label}</a>
-                                            {/each}
-                                        </div>
-                                    </div>
-                                {:else}
-                                    <a href={sub.href}>{sub.label}</a>
-                                {/if}
-                            {/each}
-                        </div>
-                    </div>
-                {:else}
-                    <a
-                        href={link.href}
-                        class:active={$page.url.pathname === link.href}
-                        aria-current={$page.url.pathname === link.href ? "page" : undefined}
-                        on:click={() => (menuOpen = false)}
-                    >{link.label}</a>
-                {/if}
-            {/each}
-            {#if isAdmin}
-                <a href="/admin/ajouter-pdf" class:active={$page.url.pathname === '/admin/ajouter-pdf'}
-                    aria-current={$page.url.pathname === '/admin/ajouter-pdf' ? "page" : undefined}
-                    on:click={() => (menuOpen = false)}
-                >Écrire</a>
-                <a href="/admin/tutoriel" class:active={$page.url.pathname.startsWith('/admin/tutoriel')}
-                    aria-current={$page.url.pathname.startsWith('/admin/tutoriel') ? "page" : undefined}
-                    on:click={() => (menuOpen = false)}
-                >📚 Tutoriel</a>
-                <a href="/" on:click|preventDefault={logout} class:active={false}>Déconnexion</a>
-            {:else}
-                <a href="/admin/login" class:active={$page.url.pathname === '/admin/login'}
-                    aria-current={$page.url.pathname === '/admin/login' ? "page" : undefined}
-                    on:click={() => (menuOpen = false)}
-                >Connexion</a>
-            {/if}
-        </nav>
-    </div>
+	<div class="header-content">
+		<a class="logo" href="/" aria-label="Accueil Sainte Populaire">
+			<img src="/images/logo_full.png" alt="Sainte Populaire" width="160" height="48" />
+		</a>
+		<button
+			class="menu-burger"
+			type="button"
+			aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+			aria-expanded={menuOpen}
+			aria-controls="main-nav"
+			onclick={() => (menuOpen = !menuOpen)}
+		>
+			{menuOpen ? '✕' : '☰'}
+		</button>
+		<nav id="main-nav" class:open={menuOpen} aria-label="Navigation principale">
+			{#each links as link (link.label)}
+				{#if link.submenu}
+					<div class="dropdown">
+						<a href={link.href} class:active={isActive(link.href)} aria-haspopup="true">
+							{link.label}
+						</a>
+						<div class="dropdown-content">
+							{#each link.submenu as sub (sub.label)}
+								{#if sub.submenu}
+									<div class="dropdown-sub">
+										<span class="dropdown-title">{sub.label}</span>
+										<div class="dropdown-content-sub">
+											{#each sub.submenu as subsub (subsub.href)}
+												<a
+													href={subsub.href}
+													aria-current={path === subsub.href ? 'page' : undefined}
+												>
+													{subsub.label}
+												</a>
+											{/each}
+										</div>
+									</div>
+								{:else}
+									<a href={sub.href} aria-current={path === sub.href ? 'page' : undefined}>
+										{sub.label}
+									</a>
+								{/if}
+							{/each}
+						</div>
+					</div>
+				{:else}
+					<a
+						href={link.href}
+						class:active={isActive(link.href)}
+						aria-current={path === link.href ? 'page' : undefined}
+					>
+						{link.label}
+					</a>
+				{/if}
+			{/each}
+		</nav>
+	</div>
+	{#if isAdmin}
+		<div class="admin-bar">
+			<div class="admin-links" role="navigation" aria-label="Espace militant">
+				<span class="admin-label">Espace militant</span>
+				<a href="/admin/ajouter-pdf" class:active={isActive('/admin/ajouter-pdf')}>Écrire</a>
+				<a href="/admin/demandes" class:active={isActive('/admin/demandes')}>Demandes</a>
+				<a href="/admin/tutoriel" class:active={isActive('/admin/tutoriel')}>Tutoriel</a>
+				<button type="button" onclick={logout}>Déconnexion</button>
+			</div>
+		</div>
+	{/if}
 </header>
+
+<style>
+	.admin-bar {
+		background: #3a2f31;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+	}
+	.admin-links {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.3rem 0.8rem;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0.35rem 1.5rem;
+	}
+	.admin-label {
+		color: #ffb3bb;
+		font-family: var(--font-title);
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin-right: 0.4rem;
+	}
+	.admin-links a,
+	.admin-links button {
+		display: inline-block;
+		padding: 0.2rem 0.6rem;
+		font-size: 0.85rem;
+		font-family: var(--font-title);
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		color: #f1e4e6;
+		background: none;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		white-space: nowrap;
+	}
+	.admin-links a.active,
+	.admin-links a:hover,
+	.admin-links button:hover {
+		background: var(--rouge-ouvrier);
+		color: #fff;
+	}
+	@media (max-width: 900px) {
+		.admin-links {
+			padding: 0.35rem 1rem;
+		}
+	}
+</style>

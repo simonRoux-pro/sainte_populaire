@@ -1,9 +1,11 @@
 <script>
-    import Hero from '$lib/components/Hero.svelte';
-    import Discover from '$lib/components/Discover.svelte';
+	import Hero from '$lib/components/Hero.svelte';
+	import Discover from '$lib/components/Discover.svelte';
 </script>
 
-<Hero />
+<svelte:head>
+	<title>Programme | Sainte Populaire</title>
+</svelte:head>
+
+<Hero heading />
 <Discover />
-
-

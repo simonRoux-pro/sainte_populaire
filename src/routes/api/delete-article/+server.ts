@@ -1,28 +1,21 @@
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { isAdmin } from '$lib/server/auth';
-import { StorageNotConfiguredError, deleteArticleById } from '$lib/server/db';
+import { deleteArticleById } from '$lib/server/db';
+import { errorResponse, unauthorized } from '$lib/server/http';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-	if (!isAdmin(cookies)) {
-		return json({ error: 'Non autorisé' }, { status: 401 });
-	}
-
-	const { id } = await request.json();
-
-	if (!id) {
-		return json({ error: "L'identifiant de l'article est obligatoire." }, { status: 400 });
-	}
+	if (!isAdmin(cookies)) return unauthorized();
 
 	try {
-		await deleteArticleById(String(id));
+		const { id } = await request.json();
+		if (!id) {
+			return json({ error: "L'identifiant de l'article est obligatoire." }, { status: 400 });
+		}
+		const deleted = await deleteArticleById(String(id));
+		if (!deleted) return json({ error: 'Article introuvable' }, { status: 404 });
 		return json({ success: true });
 	} catch (error) {
-		if (error instanceof StorageNotConfiguredError) {
-			return json({ error: error.message }, { status: 503 });
-		}
-
-		console.error('Erreur suppression article', error);
-		return json({ error: "Erreur lors de la suppression de l'article" }, { status: 500 });
+		return errorResponse(error, "Erreur lors de la suppression de l'article");
 	}
 };
