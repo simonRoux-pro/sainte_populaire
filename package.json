@@ -41,7 +41,8 @@
 	},
 	"dependencies": {
 		"@vercel/blob": "^2.8.2",
-		"marked": "^16.1.2"
+		"marked": "^16.1.2",
+		"pdfjs-dist": "6.4.299"
 	},
 	"homepage": "https://saintepopulaire.fr",
 	"engines": {

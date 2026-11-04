@@ -2,6 +2,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { formatDate } from '$lib/format';
 	import Hero from '$lib/components/Hero.svelte';
+	import PdfViewer from '$lib/components/PdfViewer.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -81,7 +82,7 @@
 						{#if article.type === 'markdown' && article.slug}
 							<a class="hero-cta" href={`/actualites/${article.slug}`}>Lire</a>
 						{:else if article.type === 'pdf' && article.file}
-							{@const file = article.file}
+							{@const file = `/pdf/${article.id}`}
 							<button
 								class="hero-cta"
 								type="button"
@@ -185,7 +186,7 @@
 				aria-label="Fermer">✕</button
 			>
 			<h2 id="pdf-modal-title" class="pdf-modal-title">{preview.title}</h2>
-			<iframe src={preview.file} title={preview.title}></iframe>
+			<PdfViewer src={preview.file} title={preview.title} />
 			<div class="pdf-modal-footer">
 				<a href={preview.file} target="_blank" rel="noopener noreferrer" class="hero-cta"
 					>Ouvrir dans un nouvel onglet</a

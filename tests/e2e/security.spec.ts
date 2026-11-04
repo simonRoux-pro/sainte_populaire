@@ -80,3 +80,8 @@ test("l'identifiant accepte une majuscule ajoutée par le clavier du téléphone
 	await page.waitForURL('**/actualites');
 	expect((await (await page.request.get('/api/login')).json()).admin).toBe(true);
 });
+
+test('la route des PDF ne sert que les articles existants', async ({ request }) => {
+	expect((await request.get('/pdf/inconnu')).status()).toBe(404);
+	expect((await request.get('/pdf/..%2F..%2Fetc%2Fpasswd')).status()).toBe(404);
+});

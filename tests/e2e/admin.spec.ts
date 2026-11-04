@@ -42,9 +42,29 @@ test('publier puis supprimer un article PDF', async ({ page }) => {
 	await expect(card).toBeVisible();
 	await expect(card.getByText('1 mars 2026')).toBeVisible();
 
+	// Le PDF est servi depuis le site et dessiné page par page (lisible aussi sur Android).
+	const pdfRes = await page.request.get(
+		(await card.getByRole('link', { name: /nouvel onglet/ }).getAttribute('href'))!
+	);
+	expect(pdfRes.status()).toBe(200);
+	expect(pdfRes.headers()['content-type']).toBe('application/pdf');
+
 	await card.getByRole('button', { name: 'Lire' }).click();
 	const dialog = page.getByRole('dialog');
 	await expect(dialog).toBeVisible();
+	const pages = dialog.locator('canvas');
+	await expect(pages).toHaveCount(2);
+	await expect(pages.first()).toHaveAttribute('aria-label', /page 1 sur 2/);
+	// La page est réellement dessinée : des pixels non blancs existent sur le canvas.
+	await expect
+		.poll(() =>
+			pages.first().evaluate((c: HTMLCanvasElement) => {
+				const data = c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data;
+				for (let i = 0; i < data.length; i += 4) if (data[i] < 200) return true;
+				return false;
+			})
+		)
+		.toBe(true);
 	await page.keyboard.press('Escape');
 	await expect(dialog).toBeHidden();
 
