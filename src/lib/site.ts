@@ -6,8 +6,6 @@ export const SITE = {
 	email: 'contact@saintepopulaire.fr',
 	description:
 		'Sainte Populaire, mouvement citoyen à Saint-Étienne pour la justice sociale, la solidarité et la démocratie locale.',
-	supportFormUrl:
-		'https://framaforms.org/comite-de-soutien-de-sainte-populaire-municipales-2026-a-saint-etienne-1746463242',
 	social: {
 		instagram: 'https://www.instagram.com/saintetiennepopulaire42/',
 		facebook: 'https://www.facebook.com/p/Saint%C3%A9-Populaire-61563283078508/',

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { formatDate } from '$lib/format';
-	import { SITE } from '$lib/site';
+	import Hero from '$lib/components/Hero.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -43,6 +43,8 @@
 </svelte:head>
 
 <svelte:window onkeydown={(e) => preview && e.key === 'Escape' && closePreview()} />
+
+<Hero compact />
 
 <div class="actus-frama-flex">
 	<section class="actualites-section">
@@ -160,14 +162,6 @@
 
 		<div class="aside-actions">
 			<a class="hero-cta" href="/rejoindre">Rejoindre le groupe WhatsApp / Signal</a>
-			<a
-				class="hero-cta secondary"
-				href={SITE.supportFormUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				Signer le comité de soutien ↗
-			</a>
 		</div>
 	</aside>
 </div>
@@ -202,6 +196,12 @@
 {/if}
 
 <style>
+	.actus-frama-flex {
+		margin-top: 1.5rem;
+	}
+	.actus-frama-flex > .actualites-section {
+		margin-top: 1rem;
+	}
 	.aside-subtitle {
 		font-size: 1rem;
 		text-align: left;
@@ -257,15 +257,6 @@
 		text-align: center;
 		border-radius: 2rem;
 		padding: 0.8rem 1.2rem;
-	}
-	.aside-actions .hero-cta.secondary {
-		background: transparent;
-		color: var(--rouge-ouvrier);
-		border: 2px solid var(--rouge-ouvrier);
-	}
-	.aside-actions .hero-cta.secondary:hover {
-		background: var(--rouge-ouvrier);
-		color: #fff;
 	}
 	.actualites-title {
 		font-size: 1.5rem;

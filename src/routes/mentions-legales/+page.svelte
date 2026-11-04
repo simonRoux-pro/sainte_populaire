@@ -26,16 +26,12 @@
 		uniquement pour la connexion à l'espace militant.
 	</p>
 	<p>
-		Le formulaire de soutien est hébergé par Framasoft (framaforms.org). Les données saisies sont
-		traitées par Sainte Populaire pour vous recontacter dans le cadre de ses activités et ne sont
-		pas cédées à des tiers. Vous pouvez demander l'accès, la rectification ou la suppression de vos
-		données en écrivant à <a href="mailto:contact@saintepopulaire.fr">contact@saintepopulaire.fr</a
-		>. Vous pouvez aussi saisir la CNIL (cnil.fr).
-	</p>
-	<p>
 		Les demandes d'ajout aux groupes WhatsApp ou Signal (prénom, numéro de téléphone, messagerie
 		choisie) sont enregistrées chiffrées et servent uniquement à vous ajouter au groupe. Elles sont
-		supprimées une fois traitées.
+		supprimées une fois traitées. Vous pouvez demander l'accès, la rectification ou la suppression
+		de vos données en écrivant à <a href="mailto:contact@saintepopulaire.fr"
+			>contact@saintepopulaire.fr</a
+		>. Vous pouvez aussi saisir la CNIL (cnil.fr).
 	</p>
 	<p>
 		Les vidéos intégrées sont fournies par YouTube, qui peut déposer ses propres cookies lors de la
